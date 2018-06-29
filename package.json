@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "adas": "node dist/index.js",
+    "adas": "node dist/ada.js",
     "build-ts": "tsc",
     "watch-ts": "tsc -w"
   },
