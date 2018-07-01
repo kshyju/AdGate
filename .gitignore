@@ -1,1 +1,5 @@
 node_modules
+src/configs/azure.ts
+src/configs/mssqlconfig.ts
+src/configs
+dist

@@ -46,7 +46,6 @@ class ImageRule {
                 return results;
             });
             return new Promise((resolve, reject) => {
-                var d = { name: "a" };
                 return resolve(texts);
             });
         });

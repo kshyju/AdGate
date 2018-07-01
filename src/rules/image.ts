@@ -44,7 +44,6 @@ export class ImageRule {
     });
 
     return new Promise((resolve: Function, reject: Function) => {
-      var d = { name: "a" };
       return resolve(texts);
     });
   }

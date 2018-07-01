@@ -13,7 +13,10 @@
   "license": "ISC",
   "dependencies": {
     "@types/puppeteer": "^1.5.0",
+    "async": "^2.6.1",
+    "mssql": "^4.1.0",
     "puppeteer": "^1.5.0",
+    "tedious": "^2.6.1",
     "tslib": "^1.9.3"
   }
 }
