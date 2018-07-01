@@ -2,6 +2,7 @@ import { ImageRule } from "./rules/image";
 import { Debug } from "./debug";
 import { AzureSqlFormatter } from "./resultformatter/AzureSqlFormatter";
 import { MSSql } from "./resultformatter/MSSql";
+import { ValidationResult } from "./types/ValidationResult";
 
 const debug = new Debug();
 
@@ -9,27 +10,22 @@ let imageRule = new ImageRule();
 const formatter = new AzureSqlFormatter();
 const mssql = new MSSql();
 export class Runner {
-  public async runRules() {
+  public async runRules(url:string) {
     const puppeteer = require("puppeteer");
+    console.log("URL:"+url);
+   // let url = "http://brokenlinks.azurewebsites.net/Home/Ads/";
 
-    let url="http://brokenlinks.azurewebsites.net/Home/Ads/";
+    const browser = await puppeteer.launch({ headless: false });
+    const page = await browser.newPage();
 
-    (async () => {
-      const browser = await puppeteer.launch({ headless: false });
-      const page = await browser.newPage();
+    await page.goto(url);
 
-      await page.goto(url);
+    await page.waitFor(1000);
 
-      await page.waitFor(1000); // Hopefully images are loaded by now
-
-      // to do : Get all registed rules here
-      var validationResult = [{a:"a"}];//await imageRule.validate(page);
-      console.log(25);
-      //const r = await mssql.publish();
-      console.log(27);
-      //console.log(r);
-      await browser.close();
-      console.log(29);
-    })();
+    // to do : Get all registed rules here
+    var validationResult = await imageRule.validate(page);
+    await browser.close();
+    var resultId = await mssql.publish(url, validationResult);
+    return resultId;
   }
 }

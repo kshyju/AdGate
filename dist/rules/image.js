@@ -17,7 +17,7 @@ class ImageRule {
     validate(page) {
         return __awaiter(this, void 0, void 0, function* () {
             debug.log("image rule-validate");
-            let texts = yield page.evaluate(() => {
+            let validatonFailures = yield page.evaluate(() => {
                 let results = [];
                 let elements = document.getElementsByTagName("img");
                 for (var element of elements) {
@@ -35,19 +35,14 @@ class ImageRule {
                     };
                     if (p.computedHeight < p.naturalHeight ||
                         p.computedWidth < p.naturalWidth) {
-                        var validationFailure = {
-                            ruleName: this.ruleName,
-                            msg: "Scaled down images found",
-                            src: element.src
-                        };
+                        var validationFailure = { msg: `${p.naturalHeight} * ${p.naturalHeight} has been scaled down to ${p.computedHeight} * ${p.computedWidth}`,
+                            url: element.src };
                         results.push(validationFailure);
                     }
                 }
                 return results;
             });
-            return new Promise((resolve, reject) => {
-                return resolve(texts);
-            });
+            return validatonFailures;
         });
     }
 }

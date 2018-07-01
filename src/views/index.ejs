@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Comparison result</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="container">
+        <h3>Ad Image analyser</h3>
+        <form action="/analyse" method="post" id="frm-analyse">
+            <input type="text" id="reqUrl" placeholder="Enter url" />
+            <button id="btn" type="submit">Go</button>
+        </form>
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $("#frm-analyse").submit(function (e) {
+                e.preventDefault();
+                var url=$(this).attr("action");
+                var d = { reqUrl : $("#reqUrl").val() };
+                $.ajax({
+                    url:url,
+                    data : JSON.stringify(d),
+                    method : "post",
+                    contentType : "application/json"
+                }).done(function (result) {
+
+                    console.log(result);
+                });
+            });
+
+
+
+
+
+        });
+    </script>
+</body>
+
+</html>

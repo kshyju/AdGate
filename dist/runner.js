@@ -17,24 +17,20 @@ let imageRule = new image_1.ImageRule();
 const formatter = new AzureSqlFormatter_1.AzureSqlFormatter();
 const mssql = new MSSql_1.MSSql();
 class Runner {
-    runRules() {
+    runRules(url) {
         return __awaiter(this, void 0, void 0, function* () {
             const puppeteer = require("puppeteer");
-            let url = "http://brokenlinks.azurewebsites.net/Home/Ads/";
-            (() => __awaiter(this, void 0, void 0, function* () {
-                const browser = yield puppeteer.launch({ headless: false });
-                const page = yield browser.newPage();
-                yield page.goto(url);
-                yield page.waitFor(1000); // Hopefully images are loaded by now
-                // to do : Get all registed rules here
-                var validationResult = [{ a: "a" }]; //await imageRule.validate(page);
-                console.log(25);
-                //const r = await mssql.publish();
-                console.log(27);
-                //console.log(r);
-                yield browser.close();
-                console.log(29);
-            }))();
+            console.log("URL:" + url);
+            // let url = "http://brokenlinks.azurewebsites.net/Home/Ads/";
+            const browser = yield puppeteer.launch({ headless: false });
+            const page = yield browser.newPage();
+            yield page.goto(url);
+            yield page.waitFor(1000);
+            // to do : Get all registed rules here
+            var validationResult = yield imageRule.validate(page);
+            yield browser.close();
+            var resultId = yield mssql.publish(url, validationResult);
+            return resultId;
         });
     }
 }

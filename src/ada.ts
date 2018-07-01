@@ -1,14 +1,14 @@
-
-import { Debug } from './debug';
-import { Runner } from './runner';
+/* import { Debug } from "./debug";
+import { Runner } from "./runner";
 
 const debug = new Debug();
-const runner =  new Runner();
+const runner = new Runner();
 const run = async function() {
-    debug.log('Inside ada');
-    await runner.runRules();
+  debug.log("Inside ada");
+  await runner.runRules();
 };
 
 run();
 
 // $ npm run adas
+ */

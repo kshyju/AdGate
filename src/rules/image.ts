@@ -2,13 +2,18 @@ import { Debug } from "../debug";
 
 const debug = new Debug();
 
+
+
 export class ImageRule {
   ruleName: string = "ImageRule";
-  async validate(page: any) {
+
+  async validate(page: any):Promise<any>  {
     debug.log("image rule-validate");
 
-    let texts = await page.evaluate(() => {
-      let results = [];
+
+
+    let validatonFailures = await page.evaluate(() => {
+      let results= [];
       let elements = document.getElementsByTagName("img");
       for (var element of elements) {
         // to do : refactor
@@ -31,20 +36,14 @@ export class ImageRule {
           p.computedHeight < p.naturalHeight ||
           p.computedWidth < p.naturalWidth
         ) {
-          var validationFailure = {
-            ruleName: this.ruleName,
-            msg: "Scaled down images found",
-            src : element.src
-          };
+          var validationFailure = {msg :`${p.naturalHeight} * ${p.naturalHeight} has been scaled down to ${p.computedHeight} * ${p.computedWidth}`,
+         url  :element.src};
           results.push(validationFailure);
         }
-      }
 
+      }
       return results;
     });
-
-    return new Promise((resolve: Function, reject: Function) => {
-      return resolve(texts);
-    });
+    return validatonFailures;
   }
 }
