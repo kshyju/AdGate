@@ -15,20 +15,15 @@ let imageRule = new image_1.ImageRule();
 class Runner {
     runRules() {
         return __awaiter(this, void 0, void 0, function* () {
-            debug.log("Runner runRules");
             const puppeteer = require("puppeteer");
             (() => __awaiter(this, void 0, void 0, function* () {
                 const browser = yield puppeteer.launch({ headless: false });
                 const page = yield browser.newPage();
-                page.once('load', () => debug.log('Page loaded!'));
-                //run rules?
-                const handleRequestFinished = (request) => {
-                    debug.log('handleRequestFinished');
-                    console.log(request._resourceType);
-                };
-                page.on("requestfinished", handleRequestFinished);
-                yield page.goto("https://news.ycombinator.com/");
-                yield page.waitFor(3000);
+                yield page.goto("http://brokenlinks.azurewebsites.net/Home/Ads/");
+                yield page.waitFor(1000); // Hopefully images are loaded by now
+                // to do : Get all registed rules here
+                var validationResult = yield imageRule.validate(page);
+                console.log(validationResult);
                 yield browser.close();
             }))();
         });

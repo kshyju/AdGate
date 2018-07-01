@@ -7,32 +7,19 @@ let imageRule = new ImageRule();
 
 export class Runner {
   public async runRules() {
-    debug.log("Runner runRules");
-
     const puppeteer = require("puppeteer");
 
     (async () => {
       const browser = await puppeteer.launch({ headless: false });
       const page = await browser.newPage();
 
+      await page.goto("http://brokenlinks.azurewebsites.net/Home/Ads/");
 
-      page.once('load', () => debug.log('Page loaded!'));
+      await page.waitFor(1000); // Hopefully images are loaded by now
 
-      //run rules?
-
-      const handleRequestFinished = (request:any)=>{
-        debug.log('handleRequestFinished');
-        console.log(request._resourceType);
-
-      }
-
-      page.on("requestfinished", handleRequestFinished);
-
-
-
-      await page.goto("https://news.ycombinator.com/");
-      await page.waitFor(3000);
-
+      // to do : Get all registed rules here
+      var validationResult = await imageRule.validate(page);
+      console.log(validationResult);
 
       await browser.close();
     })();
