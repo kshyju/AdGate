@@ -20,17 +20,17 @@ class Runner {
     runRules(url) {
         return __awaiter(this, void 0, void 0, function* () {
             const puppeteer = require("puppeteer");
-            console.log("URL:" + url);
-            // let url = "http://brokenlinks.azurewebsites.net/Home/Ads/";
+            debug.log("URL:" + url);
             const browser = yield puppeteer.launch({ headless: false });
             const page = yield browser.newPage();
             yield page.goto(url);
             yield page.waitFor(1000);
+            var requestId = yield mssql.saveRequest(url);
             // to do : Get all registed rules here
             var validationResult = yield imageRule.validate(page);
             yield browser.close();
-            var resultId = yield mssql.publish(url, validationResult);
-            return resultId;
+            yield mssql.publish(requestId, validationResult);
+            return requestId;
         });
     }
 }

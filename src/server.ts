@@ -1,6 +1,9 @@
 let express = require("express");
 const app = express();
 import { Runner } from "./runner";
+import { MSSql } from "./resultformatter/MSSql";
+
+
 
 let bodyParser = require("body-parser");
 
@@ -13,14 +16,19 @@ app.get("/", function(req:any, res:any) {
 // parse various different custom JSON types as JSON
 //app.use(express.bodyParser());
 
+app.get("/details/:id", async function(req:any, res:any) {
+  const mssql = new MSSql();
+  var resultItems = await mssql.getDetails(req.params.id)
+  res.render("details",{resultItems : resultItems});
+});
 
 app.post("/analyse", async function(req:any, res:any) {
 
   var r = new Runner();
 
-  var resultId = await r.runRules(req.body.reqUrl);
+  var requestId = await r.runRules(req.body.reqUrl);
   res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({ result: resultId }));
+    res.send(JSON.stringify({ requestId: requestId }));
 });
 
 

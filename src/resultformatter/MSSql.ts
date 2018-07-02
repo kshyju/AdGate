@@ -5,12 +5,64 @@ const debug = new Debug();
 
 import { MsSqlConfig } from "../configs/mssqlconfig";
 import { ValidationResult } from "../types/ValidationResult";
+const msSqlConfig = new MsSqlConfig();
 
 export class MSSql {
-  public async publish(
-    url: string,
-    validationResults: any
-  ): Promise<any> {
+
+
+  public  async getDetails(id:number): Promise<any>
+  {
+    const config = msSqlConfig.getConfig();
+
+    const pool = new sql.ConnectionPool(config);
+    pool.on("error", (err: any) => {
+      console.log("sql errors", err);
+    });
+
+    let sqlquery ="SELECT Id,ResourceUrl,Msg from ScaledImages WHERE RequestId=@id";
+
+    try {
+      await pool.connect();
+      let result = await pool
+        .request()
+        .input("id", sql.Int, id)
+        .query(sqlquery);
+      return result.recordset;
+
+    } catch (err) {
+      return { err: err };
+    } finally {
+      pool.close(); //closing connection after request is finished.
+    }
+  }
+
+  public async saveRequest(url: string): Promise<any> {
+    const config = msSqlConfig.getConfig();
+
+    const pool = new sql.ConnectionPool(config);
+    pool.on("error", (err: any) => {
+      console.log("sql errors", err);
+    });
+
+    let sqlquery =
+      "INSERT INTO Requests (RequestUrl) VALUES (@requestUrl); select @@identity as Id";
+
+    try {
+      await pool.connect();
+      let result = await pool
+        .request()
+        .input("requestUrl", sql.NVarChar(250), url)
+        .query(sqlquery);
+      const id = result.recordset[0].Id;
+      return id;
+    } catch (err) {
+      return { err: err };
+    } finally {
+      pool.close(); //closing connection after request is finished.
+    }
+  }
+
+  public async publish(id: number, validationResults: any): Promise<any> {
     if (validationResults.length == 0) {
       debug.log("No validation results to log!");
       return;
@@ -18,19 +70,15 @@ export class MSSql {
 
     debug.log(`Logging validation results: ${validationResults.length}`);
 
-    const msSqlConfig = new MsSqlConfig();
-
     const config = msSqlConfig.getConfig();
 
+    const pool = new sql.ConnectionPool(config);
+    pool.on("error", (err: any) => {
+      console.log("sql errors", err);
+    });
+
     try {
-      let pool = await sql.connect(config);
-      let result1 = await pool
-        .request()
-        .input("requestUrl", sql.NVarChar(250), url)
-        .query(
-          "INSERT INTO Requests (RequestUrl) VALUES (@requestUrl); select @@identity as Id"
-        );
-      const id = result1.recordset[0].Id;
+      await pool.connect();
 
       for (var i = 0; i < validationResults.length; i++) {
         let item = validationResults[i];
@@ -43,17 +91,11 @@ export class MSSql {
             "INSERT INTO ScaledImages (RequestId,ResourceUrl,Msg) VALUES (@requestId,@url,@msg);"
           );
       }
-      pool.close();
-
-      return id;
+      return;
     } catch (err) {
-      debug.log(err);
-      return;
+      return { err: err };
+    } finally {
+      pool.close(); //closing connection after request is finished.
     }
-
-    sql.on("error", (err: any) => {
-      debug.log(err);
-      return;
-    });
   }
 }

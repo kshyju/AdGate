@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Comparison result</title>
+    <title>Details</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
@@ -15,13 +15,16 @@
 
 <body>
     <div class="container">
-        <h3>Ad Image analyser</h3>
-        <form action="/analyse" method="post" id="frm-analyse">
-            <input type="text" id="reqUrl" placeholder="Enter url" />
-            <button id="btn" type="submit">Go</button>
-        </form>
-        <div id="progress"></div>
-        <div id="details"></div>
+
+        <div>
+            <% resultItems.forEach(function(item) { %>
+                <div>
+                    <div> <%= item.ResourceUrl %></div>
+                    <div> <%= item.Msg %></div>
+                </div>
+            <% }); %>
+            </div>
+
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -29,19 +32,15 @@
         $(function () {
             $("#frm-analyse").submit(function (e) {
                 e.preventDefault();
-                var $progress = $("#progress");
                 var url=$(this).attr("action");
                 var d = { reqUrl : $("#reqUrl").val() };
-                $progress.html("Processing...");
                 $.ajax({
                     url:url,
                     data : JSON.stringify(d),
                     method : "post",
                     contentType : "application/json"
                 }).done(function (result) {
-                    var details='<a target="_blank" href="/details/' + result.requestId + '">View details</a>'
-                    $progress.html("Done!");
-                    $("#details").html(details);
+
                     console.log(result);
                 });
             });

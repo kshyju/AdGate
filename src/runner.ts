@@ -12,8 +12,7 @@ const mssql = new MSSql();
 export class Runner {
   public async runRules(url:string) {
     const puppeteer = require("puppeteer");
-    console.log("URL:"+url);
-   // let url = "http://brokenlinks.azurewebsites.net/Home/Ads/";
+    debug.log("URL:"+url);
 
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
@@ -22,10 +21,11 @@ export class Runner {
 
     await page.waitFor(1000);
 
+    var requestId = await mssql.saveRequest(url);
     // to do : Get all registed rules here
     var validationResult = await imageRule.validate(page);
     await browser.close();
-    var resultId = await mssql.publish(url, validationResult);
-    return resultId;
+    await mssql.publish(requestId, validationResult);
+    return requestId;
   }
 }
