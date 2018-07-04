@@ -10,10 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const image_1 = require("./rules/image");
 const debug_1 = require("./debug");
+const MSSql_1 = require("./resultformatter/MSSql");
 const debug = new debug_1.Debug();
 const imageRule = new image_1.ImageRule();
-/* const mssql = new MSSql();
- */ class Runner {
+const mssql = new MSSql_1.MSSql();
+class Runner {
     runRules(url, delay) {
         return __awaiter(this, void 0, void 0, function* () {
             const puppeteer = require("puppeteer");
@@ -25,22 +26,15 @@ const imageRule = new image_1.ImageRule();
             if (delay > 0) {
                 yield page.waitFor(1000);
             }
-            /*     var requestId = await mssql.saveRequest(url);
-             */ // to do : Get all registed rules here
-            //  var validationResult:ValidationResult[] = await imageRule.validate(page);
-            imageRule.validate(page).then(function (g) {
+            var requestId = yield mssql.saveRequest(url);
+            console.log('requestId:', requestId);
+            imageRule.validate(page).then(function (validationResult) {
                 return __awaiter(this, void 0, void 0, function* () {
-                    console.log(30);
-                    console.log(g);
                     yield browser.close();
+                    yield mssql.publish(requestId, validationResult);
+                    return requestId;
                 });
             });
-            //Promise.all([a]).then(function(ad){
-            // console.log(ad);
-            // console.log('ValidationResults1:',a);
-            //});
-            /*     await mssql.publish(requestId, validationResult);
-             */ return 1; //requestId;
         });
     }
 }

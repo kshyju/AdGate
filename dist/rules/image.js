@@ -95,10 +95,9 @@ class ImageRule {
                 function validateDiamension(p, results) {
                     if (p != null) {
                         if (p.computedHeight < p.naturalHeight || p.computedWidth < p.naturalWidth) {
-                            //console.log('Image SCALED');
                             var validationFailure2 = {
                                 msg: `${p.naturalWidth} * ${p.naturalHeight} has been scaled down to ${p.computedWidth} * ${p.computedHeight}`,
-                                url: p.src
+                                url: p.url
                             };
                             results.push(validationFailure2);
                         }
@@ -106,17 +105,19 @@ class ImageRule {
                 }
                 return new Promise((resolve, reject) => {
                     var results = [];
+                    let imgElements = document.querySelectorAll("img");
+                    console.log(`Processing ${imgElements.length} image elements`);
+                    for (var element of imgElements) {
+                        let p = getDiamensionForImage(element);
+                        validateDiamension(p, results);
+                    }
                     let nonImgElementsToLoad = document.querySelectorAll("div");
                     processNonImageElements(nonImgElementsToLoad, results).then(function (a) {
-                        console.log(130);
+                        console.log('non image elements validated');
                         resolve(results);
-                        //return results;
                     });
                 });
-                //console.log('result2');
-                // return results;
             });
-            console.log('validatonFailures', validatonFailures);
             return validatonFailures;
         });
     }
