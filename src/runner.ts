@@ -26,13 +26,17 @@ const imageRule = new ImageRule();
 /*     var requestId = await mssql.saveRequest(url);
  */    // to do : Get all registed rules here
  //  var validationResult:ValidationResult[] = await imageRule.validate(page);
-    var a =  await imageRule.validate(page);
+    imageRule.validate(page).then(async function(g){
+      console.log(30);
+      console.log(g);
+      await browser.close();
+    });
     //Promise.all([a]).then(function(ad){
      // console.log(ad);
-      //console.log('ValidationResults1:',ad);
+     // console.log('ValidationResults1:',a);
     //});
     
-    //await browser.close();
+   
 /*     await mssql.publish(requestId, validationResult);
  */    return 1; //requestId;
   }

@@ -16,7 +16,7 @@ export class ImageRule {
 
 
 
-    let validatonFailures = await page.evaluate(async () => {
+    let validatonFailures = await page.evaluate(() => {
 
       function getImageUrl(s: any) {
         //could be in bg
@@ -99,19 +99,13 @@ export class ImageRule {
             items.forEach(function (item) {
               validateDiamension(item, results);
             });
-            console.log('results', JSON.stringify(results));
+            console.log('results1', JSON.stringify(results));
             //return results;
             resolve(results);
           });
 
         });
       }
-
-      // Mount all the images so taht it is "loaded" to get natural Height
-      // Returns a subset of elements which has valid image bg
-
-
-
 
       function validateDiamension(p: any, results: any) {
 
@@ -128,29 +122,23 @@ export class ImageRule {
         }
       }
 
-      await new Promise((resolve, reject) => {
 
+       return new Promise((resolve, reject) => {
         var results: any[] = [];
 
-        /*         let imgElements: any = document.querySelectorAll("img");
-                //console.log(`Processing ${imgElements.length} image elements`);
-          
-                for (var element of imgElements) {
-                  let p = getDiamensionForImage(element);
-                  validateDiamension(p, results);
-                } */
-
         let nonImgElementsToLoad: any = document.querySelectorAll("div");
-        processNonImageElements(nonImgElementsToLoad, results);
-        console.log('result2');
+        processNonImageElements(nonImgElementsToLoad, results).then(function (a: any) {
+          console.log(130);
+          resolve(results);
+          //return results;
+        });
+      }); 
 
-      });
-
-
-
-      //return results;
+     
+      //console.log('result2');
+      // return results;
     });
-
+    console.log('validatonFailures', validatonFailures);
     return validatonFailures;
   }
 }

@@ -17,7 +17,7 @@ class ImageRule {
     validate(page) {
         return __awaiter(this, void 0, void 0, function* () {
             debug.log("image rule-validate");
-            let validatonFailures = yield page.evaluate(() => __awaiter(this, void 0, void 0, function* () {
+            let validatonFailures = yield page.evaluate(() => {
                 function getImageUrl(s) {
                     //could be in bg
                     var background = s.getPropertyValue("background-image");
@@ -86,14 +86,12 @@ class ImageRule {
                             items.forEach(function (item) {
                                 validateDiamension(item, results);
                             });
-                            console.log('results', JSON.stringify(results));
+                            console.log('results1', JSON.stringify(results));
                             //return results;
                             resolve(results);
                         });
                     });
                 }
-                // Mount all the images so taht it is "loaded" to get natural Height
-                // Returns a subset of elements which has valid image bg
                 function validateDiamension(p, results) {
                     if (p != null) {
                         if (p.computedHeight < p.naturalHeight || p.computedWidth < p.naturalWidth) {
@@ -106,21 +104,19 @@ class ImageRule {
                         }
                     }
                 }
-                yield new Promise((resolve, reject) => {
+                return new Promise((resolve, reject) => {
                     var results = [];
-                    /*         let imgElements: any = document.querySelectorAll("img");
-                            //console.log(`Processing ${imgElements.length} image elements`);
-                      
-                            for (var element of imgElements) {
-                              let p = getDiamensionForImage(element);
-                              validateDiamension(p, results);
-                            } */
                     let nonImgElementsToLoad = document.querySelectorAll("div");
-                    processNonImageElements(nonImgElementsToLoad, results);
-                    console.log('result2');
+                    processNonImageElements(nonImgElementsToLoad, results).then(function (a) {
+                        console.log(130);
+                        resolve(results);
+                        //return results;
+                    });
                 });
-                //return results;
-            }));
+                //console.log('result2');
+                // return results;
+            });
+            console.log('validatonFailures', validatonFailures);
             return validatonFailures;
         });
     }
