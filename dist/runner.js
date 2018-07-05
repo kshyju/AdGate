@@ -28,12 +28,16 @@ class Runner {
             }
             var requestId = yield mssql.saveRequest(url);
             console.log('requestId:', requestId);
-            imageRule.validate(page).then(function (validationResult) {
+            return imageRule.validate(page).then(function (validationResult) {
                 return __awaiter(this, void 0, void 0, function* () {
                     yield browser.close();
                     yield mssql.publish(requestId, validationResult);
                     return requestId;
                 });
+            })
+                .catch(reason => {
+                console.error('onRejected function called: ' + reason);
+                return 0;
             });
         });
     }

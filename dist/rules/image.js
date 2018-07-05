@@ -25,8 +25,8 @@ class ImageRule {
                         return null;
                     }
                     var imageUrl = background
-                        .replace(/url\((['"])?(.*?)\1\)/gi, '$2')
-                        .split(',')[0];
+                        .replace(/url\((['"])?(.*?)\1\)/gi, "$2")
+                        .split(",")[0];
                     if (!imageUrl) {
                         return null;
                     }
@@ -34,12 +34,17 @@ class ImageRule {
                 }
                 function getDiamensionForImage(element) {
                     let s = getComputedStyle(element);
-                    let p = { naturalWidth: 0, naturalHeight: 0, computedWidth: 0, computedHeight: 0, src: "" };
-                    let imageUrl = "";
                     if (element.tagName === "IMG") {
-                        p.src = element.src;
-                        p.naturalWidth = element.naturalWidth;
-                        p.naturalHeight = element.naturalHeight;
+                        let computedHeightStr = s.getPropertyValue("height");
+                        let computedWidthStr = s.getPropertyValue("width");
+                        let p = {
+                            url: element.src,
+                            naturalWidth: element.naturalWidth,
+                            naturalHeight: element.naturalHeight,
+                            computedWidth: +computedWidthStr.replace("px", ""),
+                            computedHeight: +computedHeightStr.replace("px", "")
+                        };
+                        return p;
                     }
                     return null;
                 }
@@ -71,7 +76,6 @@ class ImageRule {
                             let element = elements[i];
                             let s = getComputedStyle(element);
                             var imageUrl = getImageUrl(s);
-                            //console.log('imageUrl',imageUrl);
                             if (imageUrl != null) {
                                 let computedHeightStr = s.getPropertyValue("height");
                                 let computedWidthStr = s.getPropertyValue("width");
@@ -82,11 +86,10 @@ class ImageRule {
                         }
                         Promise.all(promiseArray).then(function (items) {
                             console.log(`${items.length} images loaded`);
-                            console.log(JSON.stringify(items));
                             items.forEach(function (item) {
                                 validateDiamension(item, results);
                             });
-                            console.log('results1', JSON.stringify(results));
+                            console.log("results1", JSON.stringify(results));
                             //return results;
                             resolve(results);
                         });
@@ -94,7 +97,8 @@ class ImageRule {
                 }
                 function validateDiamension(p, results) {
                     if (p != null) {
-                        if (p.computedHeight < p.naturalHeight || p.computedWidth < p.naturalWidth) {
+                        if (p.computedHeight < p.naturalHeight ||
+                            p.computedWidth < p.naturalWidth) {
                             var validationFailure2 = {
                                 msg: `${p.naturalWidth} * ${p.naturalHeight} has been scaled down to ${p.computedWidth} * ${p.computedHeight}`,
                                 url: p.url
@@ -113,7 +117,7 @@ class ImageRule {
                     }
                     let nonImgElementsToLoad = document.querySelectorAll("div");
                     processNonImageElements(nonImgElementsToLoad, results).then(function (a) {
-                        console.log('non image elements validated');
+                        console.log("Non image elements validated");
                         resolve(results);
                     });
                 });

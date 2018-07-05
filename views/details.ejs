@@ -25,6 +25,10 @@
                 float:left;
                 margin: 10px;
             }
+            .res-img img{
+                width:100%;
+                height:100%;
+            }
             .res-msg
             {
                 padding:5px;float:left;
@@ -39,10 +43,11 @@
     <div class="container">
 
         <div>
+            <h3>Image scaling validation results</h3>
             <% resultItems.forEach(function(item) { %>
-                <div>
-                    <div> <%= item.ResourceUrl %></div>
-                    <div> <%= item.Msg %></div>
+                <div class="validation-item">
+                    <div class="res-img"><img src='<%= item.ResourceUrl %>'></div>
+                    <div class="res-msg"> <%= item.Msg %></div>
                 </div>
             <% }); %>
             </div>

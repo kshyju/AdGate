@@ -96,6 +96,7 @@ export class MSSql {
       }
       return;
     } catch (err) {
+      console.log(err);
       return { err: err };
     } finally {
       pool.close(); //closing connection after request is finished.
