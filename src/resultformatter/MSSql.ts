@@ -12,6 +12,8 @@ export class MSSql {
 
   public  async getDetails(id:number): Promise<any>
   {
+    debug.log(`Getting data for ${id}`);
+
     const config = msSqlConfig.getConfig();
 
     const pool = new sql.ConnectionPool(config);
@@ -30,6 +32,7 @@ export class MSSql {
       return result.recordset;
 
     } catch (err) {
+      console.log(err);
       return { err: err };
     } finally {
       pool.close(); //closing connection after request is finished.

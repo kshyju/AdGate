@@ -8,7 +8,7 @@ const debug = new Debug();
 const imageRule = new ImageRule();
 const mssql = new MSSql();
 export class Runner {
-  public async runRules(url: string, delay: number) {
+  public async runRules(url: string, delay: number):Promise<number> {
     const puppeteer = require("puppeteer");
     debug.log("URL:" + url);
 
@@ -24,11 +24,15 @@ export class Runner {
 
     var requestId = await mssql.saveRequest(url);
     console.log('requestId:',requestId);
-    imageRule.validate(page).then(async function (validationResult) {
+    return imageRule.validate(page).then(async function (validationResult) {
 
       await browser.close();
       await mssql.publish(requestId, validationResult);
       return requestId;
+    })
+    .catch( reason => {
+      console.error( 'onRejected function called: ' + reason );
+      return 0;
     });
   }
 }

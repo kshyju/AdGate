@@ -19,7 +19,9 @@ export let index = (req: Request, res: any) => {
  */
 export let details = async (req: any, res: any) => {
     const mssql = new MSSql();
-    var resultItems = await mssql.getDetails(req.params.id)
+    var resultItems = await mssql.getDetails(req.params.id);
+    console.log('resultItems',resultItems);
+
     res.render("details", { resultItems: resultItems });
 }
 
