@@ -12,9 +12,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/documentdb": "^1.10.4",
     "@types/puppeteer": "^1.5.0",
     "async": "^2.6.1",
     "body-parser": "^1.18.3",
+    "documentdb": "^1.14.4",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "mssql": "^4.1.0",

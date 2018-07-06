@@ -9,7 +9,7 @@ export class ImageRule {
   async validate(page: any): Promise<Array<ValidationResult>> {
     debug.log("image rule-validate");
 
-    let validatonFailures = await page.evaluate(() => {
+    let validationFailures = await page.evaluate(() => {
       function getImageUrl(s: any) {
         //could be in bg
         var background = s.getPropertyValue("background-image");
@@ -25,7 +25,7 @@ export class ImageRule {
         return imageUrl;
       }
 
-      function getDiamensionForImage(element: any): any {
+      function getDimensionForImage(element: any): any {
         let s = getComputedStyle(element);
 
         if (element.tagName === "IMG") {
@@ -37,8 +37,7 @@ export class ImageRule {
             naturalWidth : element.naturalWidth,
             naturalHeight : element.naturalHeight,
             computedWidth : +computedWidthStr.replace("px", ""),
-            computedHeight : +computedHeightStr.replace("px", "");
-
+            computedHeight : +computedHeightStr.replace("px", "")
           };
           return p;
         }
@@ -96,7 +95,7 @@ export class ImageRule {
             console.log(`${items.length} images loaded`);
 
             items.forEach(function(item) {
-              validateDiamension(item, results);
+              validateDimension(item, results);
             });
             console.log("results1", JSON.stringify(results));
             //return results;
@@ -105,7 +104,7 @@ export class ImageRule {
         });
       }
 
-      function validateDiamension(p: any, results: any) {
+      function validateDimension(p: any, results: any) {
         if (p != null) {
           if (
             p.computedHeight < p.naturalHeight ||
@@ -130,8 +129,8 @@ export class ImageRule {
         console.log(`Processing ${imgElements.length} image elements`);
 
         for (var element of imgElements) {
-          let p = getDiamensionForImage(element);
-          validateDiamension(p, results);
+          let p = getDimensionForImage(element);
+          validateDimension(p, results);
         }
 
         let nonImgElementsToLoad: any = document.querySelectorAll("div");
@@ -144,6 +143,6 @@ export class ImageRule {
       });
     });
 
-    return validatonFailures;
+    return validationFailures;
   }
 }

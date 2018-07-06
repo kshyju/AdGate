@@ -17,7 +17,7 @@ class ImageRule {
     validate(page) {
         return __awaiter(this, void 0, void 0, function* () {
             debug.log("image rule-validate");
-            let validatonFailures = yield page.evaluate(() => {
+            let validationFailures = yield page.evaluate(() => {
                 function getImageUrl(s) {
                     //could be in bg
                     var background = s.getPropertyValue("background-image");
@@ -32,7 +32,7 @@ class ImageRule {
                     }
                     return imageUrl;
                 }
-                function getDiamensionForImage(element) {
+                function getDimensionForImage(element) {
                     let s = getComputedStyle(element);
                     if (element.tagName === "IMG") {
                         let computedHeightStr = s.getPropertyValue("height");
@@ -87,7 +87,7 @@ class ImageRule {
                         Promise.all(promiseArray).then(function (items) {
                             console.log(`${items.length} images loaded`);
                             items.forEach(function (item) {
-                                validateDiamension(item, results);
+                                validateDimension(item, results);
                             });
                             console.log("results1", JSON.stringify(results));
                             //return results;
@@ -95,7 +95,7 @@ class ImageRule {
                         });
                     });
                 }
-                function validateDiamension(p, results) {
+                function validateDimension(p, results) {
                     if (p != null) {
                         if (p.computedHeight < p.naturalHeight ||
                             p.computedWidth < p.naturalWidth) {
@@ -112,8 +112,8 @@ class ImageRule {
                     let imgElements = document.querySelectorAll("img");
                     console.log(`Processing ${imgElements.length} image elements`);
                     for (var element of imgElements) {
-                        let p = getDiamensionForImage(element);
-                        validateDiamension(p, results);
+                        let p = getDimensionForImage(element);
+                        validateDimension(p, results);
                     }
                     let nonImgElementsToLoad = document.querySelectorAll("div");
                     processNonImageElements(nonImgElementsToLoad, results).then(function (a) {
@@ -122,7 +122,7 @@ class ImageRule {
                     });
                 });
             });
-            return validatonFailures;
+            return validationFailures;
         });
     }
 }
