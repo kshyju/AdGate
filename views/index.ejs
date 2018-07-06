@@ -8,68 +8,77 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>🚀</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-        crossorigin="anonymous">
-    <style>
 
-    input{
-        width:600px;
-    }
-    form div{
-        padding:5px;
-    }
-    form button{
-        background-color: #d14836;
-        color:white;
-    }
+
     </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+
 </head>
 
 <body>
     <div class="container">
-        <h3>Image analyser 🚀</h3>
-        <form action="/analyse" method="post" id="frm-analyse">
-            <div>
-                <input type="text" id="reqUrl" placeholder="Enter url" />
+        <div class="row">
+            <div class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content">
+                <h3>🚀</h3>
 
             </div>
-            <div>
-                <button id="btn" type="submit">Go</button>
+        </div>
+        <div class="row">
+            <div class="row">
+                <div class="col-12 bd-content" role="main">
+                    <form action="/analyse" method="post" id="frm-analyse">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email URL to validate</label>
+                            <input type="text" id="reqUrl" placeholder="Enter URL" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Wait time(in seconds) before starting validation</label>
+                            <input type="number" class="form-control" id="delay" value="1" max="5">
+                            <small id="emailHelp" class="form-text text-muted">If your page is lazy loading images, it is better to wait a few seconds</small>
+                        </div>
 
+                        <button id="btn" type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
             </div>
-        </form>
-        <div id="progress"></div>
-        <div id="details"></div>
-    </div>
+            <div id="progress"></div>
+            <div id="details"></div>
+        </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script>
-        $(function () {
-            $("#frm-analyse").submit(function (e) {
-                e.preventDefault();
-                var $progress = $("#progress");
-                var url=$(this).attr("action");
-                var d = { reqUrl : $("#reqUrl").val() };
-                $progress.html("Processing...");
-                $.ajax({
-                    url:url,
-                    data : JSON.stringify(d),
-                    method : "post",
-                    contentType : "application/json"
-                }).done(function (result) {
-                    var details='<a target="_blank" href="/details/' + result.requestId + '">View details</a>'
-                    $progress.html("Done!");
-                    $("#details").html(details);
-                    console.log(result);
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script>
+            $(function () {
+                $("#frm-analyse").submit(function (e) {
+                    e.preventDefault();
+                    var $progress = $("#progress");
+                    var url = $(this).attr("action");
+                    var d = {
+                        reqUrl: $("#reqUrl").val(),
+                        delay :  $("#delay").val(),
+                    };
+                    $progress.html("Processing...");
+                    $.ajax({
+                        url: url,
+                        data: JSON.stringify(d),
+                        method: "post",
+                        contentType: "application/json"
+                    }).done(function (result) {
+                        console.log(result);
+                        var details =
+                            `<div class="alert alert-danger">${result.resultCount} issues found!</div><a target="_blank" href="/details/${result.id}">Click here to view details</a>`;
+                        $progress.html("Done!");
+                        $("#details").html(details);
+                        console.log(result);
+                    });
                 });
+
+
+                //
+
+
             });
-
-
-            //
-
-
-        });
-    </script>
+        </script>
 </body>
 
 </html>

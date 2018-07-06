@@ -1,34 +1,32 @@
 import { ImageRule } from "./rules/image";
 import { Debug } from "./debug";
-import { MSSql } from "./resultformatter/MSSql";
 import { Result } from "./types/Result";
 import { PerfTiming } from "./types/PerfTiming";
 
 import { Cosmos } from "./resultformatter/Cosmos";
 import { NewDocument } from "documentdb";
 const { PerformanceObserver, performance } = require("perf_hooks");
-
 const debug = new Debug();
 
 const imageRule = new ImageRule();
-const mssql = new MSSql();
 var cosmos = new Cosmos();
 
 export class Runner {
   public async runRules(url: string, delay: number): Promise<Result> {
-    const puppeteer = require("puppeteer");
-    debug.log("URL:" + url);
+    debug.log(`Analyzing URL:${url}`);
+
+    const puppeteer = require("puppeteer");      
 
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
     page.on("console", function(msg: any) {
-      console.log(msg.text());
+      console.log('FROM PAGE : '+msg.text());
     });
 
     await page.goto(url);
     if (delay > 0) {
-      await page.waitFor(1000);
+      await page.waitFor(delay*1000);
     }
 
     performance.mark("imageRuleStart");
@@ -48,6 +46,7 @@ export class Runner {
         const d = {
           id: "",
           url: url,
+          delay:delay,
           result: {
             image: validationResults
           },
@@ -59,14 +58,15 @@ export class Runner {
           })
         };
         await browser.close();
-
+        performance.clearMarks();
+        performance.clearMeasures();
+        
         return cosmos.create(d).then(function(document: NewDocument) {
           return new Result(document.id, d.resultCount);
         });
-        //await mssql.publish(requestId, validationResult);
       })
       .catch(reason => {
-        console.error("onRejected function called: " + reason);
+        debug.log("onRejected function called: " + reason);
         return null;
       });
   }

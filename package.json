@@ -6,7 +6,8 @@
   "scripts": {
     "adas": "node dist/ada.js",
     "build-ts": "tsc",
-    "watch-ts": "tsc -w"
+    "watch-ts": "tsc -w",
+    "serve": "node dist/server.js"
   },
   "bin": "dist/index.js",
   "author": "",

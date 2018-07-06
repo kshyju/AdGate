@@ -16,7 +16,7 @@ class ImageRule {
     }
     validate(page) {
         return __awaiter(this, void 0, void 0, function* () {
-            debug.log("image rule-validate");
+            debug.log("Inside ImageRule.validate");
             let validationFailures = yield page.evaluate(() => {
                 function getImageUrl(s) {
                     //could be in bg
@@ -70,7 +70,7 @@ class ImageRule {
                 }
                 function processNonImageElements(elements, results) {
                     return new Promise((resolve, reject) => {
-                        console.log(`processing ${elements.length} non image elements`);
+                        console.debug(`processing ${elements.length} non image elements`);
                         var promiseArray = [];
                         for (var i = 0; i < elements.length; i++) {
                             let element = elements[i];
@@ -85,12 +85,10 @@ class ImageRule {
                             }
                         }
                         Promise.all(promiseArray).then(function (items) {
-                            console.log(`${items.length} images loaded`);
+                            console.debug(`${items.length} images loaded for analysis`);
                             items.forEach(function (item) {
                                 validateDimension(item, results);
                             });
-                            console.log("results1", JSON.stringify(results));
-                            //return results;
                             resolve(results);
                         });
                     });
@@ -113,14 +111,14 @@ class ImageRule {
                 return new Promise((resolve, reject) => {
                     var results = [];
                     let imgElements = document.querySelectorAll("img");
-                    console.log(`Processing ${imgElements.length} image elements`);
+                    console.debug(`Processing ${imgElements.length} image elements`);
                     for (var element of imgElements) {
                         let p = getDimensionForImage(element);
                         validateDimension(p, results);
                     }
                     let nonImgElementsToLoad = document.querySelectorAll("div");
                     processNonImageElements(nonImgElementsToLoad, results).then(function (a) {
-                        console.log("Non image elements validated");
+                        console.debug("Non image elements validated");
                         resolve(results);
                     });
                 });

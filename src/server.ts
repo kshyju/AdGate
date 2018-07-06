@@ -1,5 +1,4 @@
 import { Runner } from "./runner";
-import { MSSql } from "./resultformatter/MSSql";
 
 import app from "./app";
 
