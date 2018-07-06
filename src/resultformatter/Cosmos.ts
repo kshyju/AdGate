@@ -3,6 +3,7 @@ import { DocumentClient, CollectionMeta, DocumentQuery, RetrievedDocument, NewDo
 var config = require("../configs/cosmos");
 var url = require('url');
 
+
 var databaseUrl = `dbs/${config.database.id}`;
 var collectionUrl = `${databaseUrl}/colls/${config.collection.id}`;
 

@@ -1,12 +1,12 @@
 import { Debug } from "../debug";
-import { ValidationResult } from "../types/ValidationResult";
+import { Result } from "../types/Result";
 import { resolve } from "url";
 const debug = new Debug();
 
 export class ImageRule {
   ruleName: string = "ImageRule";
 
-  async validate(page: any): Promise<Array<ValidationResult>> {
+  async validate(page: any): Promise<Array<Result>> {
     debug.log("image rule-validate");
 
     let validationFailures = await page.evaluate(() => {
@@ -33,11 +33,11 @@ export class ImageRule {
           let computedWidthStr = s.getPropertyValue("width");
 
           let p = {
-            url : element.src,
-            naturalWidth : element.naturalWidth,
-            naturalHeight : element.naturalHeight,
-            computedWidth : +computedWidthStr.replace("px", ""),
-            computedHeight : +computedHeightStr.replace("px", "")
+            url: element.src,
+            naturalWidth: element.naturalWidth,
+            naturalHeight: element.naturalHeight,
+            computedWidth: +computedWidthStr.replace("px", ""),
+            computedHeight: +computedHeightStr.replace("px", "")
           };
           return p;
         }
@@ -110,15 +110,14 @@ export class ImageRule {
             p.computedHeight < p.naturalHeight ||
             p.computedWidth < p.naturalWidth
           ) {
-            var validationFailure2 = {
-              msg: `${p.naturalWidth} * ${
-                p.naturalHeight
-              } has been scaled down to ${p.computedWidth} * ${
-                p.computedHeight
-              }`,
+            var validationFailure = {
+              naturalWidth: p.naturalWidth,
+              naturalHeight: p.naturalHeight,
+              computedWidth: p.computedWidth,
+              computedHeight: p.computedHeight,
               url: p.url
             };
-            results.push(validationFailure2);
+            results.push(validationFailure);
           }
         }
       }

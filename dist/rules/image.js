@@ -99,11 +99,14 @@ class ImageRule {
                     if (p != null) {
                         if (p.computedHeight < p.naturalHeight ||
                             p.computedWidth < p.naturalWidth) {
-                            var validationFailure2 = {
-                                msg: `${p.naturalWidth} * ${p.naturalHeight} has been scaled down to ${p.computedWidth} * ${p.computedHeight}`,
+                            var validationFailure = {
+                                naturalWidth: p.naturalWidth,
+                                naturalHeight: p.naturalHeight,
+                                computedWidth: p.computedWidth,
+                                computedHeight: p.computedHeight,
                                 url: p.url
                             };
-                            results.push(validationFailure2);
+                            results.push(validationFailure);
                         }
                     }
                 }
