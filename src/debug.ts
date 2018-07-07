@@ -6,6 +6,6 @@ export class Debug
     }
     debug(message:string)
     {
-        console.log(`\n ${message}`);
+       // console.log(`\n ${message}`);
     }
 }

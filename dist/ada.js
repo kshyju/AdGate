@@ -18,7 +18,7 @@ const run = function () {
         const args = process.argv.slice(2);
         const url = args[0];
         debug.log('Processing url:' + url);
-        yield runner.runRules(url, 1000);
+        yield runner.runRules(url, 1);
     });
 };
 run();

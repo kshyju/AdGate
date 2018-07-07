@@ -71,7 +71,7 @@ export class ImageRule {
 
       function processNonImageElements(elements: any, results: any): any {
         return new Promise((resolve, reject) => {
-          console.debug(`processing ${elements.length} non image elements`);
+         // debug.debug(`processing ${elements.length} non image elements`);
           var promiseArray = [];
           for (var i = 0; i < elements.length; i++) {
             let element = elements[i];
@@ -92,7 +92,7 @@ export class ImageRule {
           }
 
           Promise.all(promiseArray).then(function (items) {
-            console.debug(`${items.length} images loaded for analysis`);
+            //debug.debug(`${items.length} images loaded for analysis`);
 
             items.forEach(function (item) {
               validateDimension(item, results);
@@ -123,7 +123,7 @@ export class ImageRule {
       return new Promise((resolve, reject) => {
         var results: any[] = [];
         let imgElements: any = document.querySelectorAll("img");
-        console.debug(`Processing ${imgElements.length} image elements`);
+        //debug.debug(`Processing ${imgElements.length} image elements`);
 
         for (var element of imgElements) {
           let p = getDimensionForImage(element);
@@ -134,7 +134,7 @@ export class ImageRule {
         processNonImageElements(nonImgElementsToLoad, results).then(function (
           a: any
         ) {
-          console.debug("Non image elements validated");
+          //debug.debug("Non image elements validated");
           resolve(results);
         });
       });

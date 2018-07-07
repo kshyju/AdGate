@@ -70,7 +70,7 @@ class ImageRule {
                 }
                 function processNonImageElements(elements, results) {
                     return new Promise((resolve, reject) => {
-                        console.debug(`processing ${elements.length} non image elements`);
+                        // debug.debug(`processing ${elements.length} non image elements`);
                         var promiseArray = [];
                         for (var i = 0; i < elements.length; i++) {
                             let element = elements[i];
@@ -85,7 +85,7 @@ class ImageRule {
                             }
                         }
                         Promise.all(promiseArray).then(function (items) {
-                            console.debug(`${items.length} images loaded for analysis`);
+                            //debug.debug(`${items.length} images loaded for analysis`);
                             items.forEach(function (item) {
                                 validateDimension(item, results);
                             });
@@ -111,14 +111,14 @@ class ImageRule {
                 return new Promise((resolve, reject) => {
                     var results = [];
                     let imgElements = document.querySelectorAll("img");
-                    console.debug(`Processing ${imgElements.length} image elements`);
+                    //debug.debug(`Processing ${imgElements.length} image elements`);
                     for (var element of imgElements) {
                         let p = getDimensionForImage(element);
                         validateDimension(p, results);
                     }
                     let nonImgElementsToLoad = document.querySelectorAll("div");
                     processNonImageElements(nonImgElementsToLoad, results).then(function (a) {
-                        console.debug("Non image elements validated");
+                        //debug.debug("Non image elements validated");
                         resolve(results);
                     });
                 });

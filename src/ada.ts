@@ -10,7 +10,7 @@ const run = async function() {
   const url = args[0];
  
   debug.log('Processing url:'+url);
-  await runner.runRules(url,1000);
+  await runner.runRules(url,1);
 };
 
 run();

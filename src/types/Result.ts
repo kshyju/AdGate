@@ -1,11 +1,11 @@
 export class Result {
-  public resultCount: number;
+  public issueCount: number;
   public url: string;
   public id: string
 
-  constructor(id:string,resultCount:number)
+  constructor(id:string,issueCount:number)
   {
     this.id= id;
-    this.resultCount = resultCount;
+    this.issueCount = issueCount;
   }
 }

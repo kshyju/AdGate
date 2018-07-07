@@ -5,7 +5,7 @@ class Debug {
         console.log(`\n ${message}`);
     }
     debug(message) {
-        console.log(`\n ${message}`);
+        // console.log(`\n ${message}`);
     }
 }
 exports.Debug = Debug;

@@ -15,25 +15,32 @@ export class Runner {
   public async runRules(url: string, delay: number): Promise<Result> {
     debug.log(`Analyzing URL:${url}`);
 
-    const puppeteer = require("puppeteer");      
+    const puppeteer = require("puppeteer");
 
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
-    page.on("console", function(msg: any) {
-      console.log('FROM PAGE : '+msg.text());
+
+    let consoleEntries: string[] = [];
+
+    page.on("console", function (msg: any) {
+     /*  for (let i = 0; i < msg.args().length; ++i) {
+        console.log(`${i}: ${msg.args()[i]}`);
+      } */
+      //console.log('FROM PAGE : ' + msg.text());
+      consoleEntries.push(msg.text())
     });
 
     await page.goto(url);
     if (delay > 0) {
-      await page.waitFor(delay*1000);
+      await page.waitFor(delay * 1000);
     }
 
     performance.mark("imageRuleStart");
 
     return imageRule
       .validate(page)
-      .then(async function(validationResults) {
+      .then(async function (validationResults) {
         performance.mark("imageRuleEnd");
         performance.measure(
           "imageValidation",
@@ -46,27 +53,28 @@ export class Runner {
         const d = {
           id: "",
           url: url,
-          delay:delay,
+          delay: delay,
           result: {
-            image: validationResults
+            image: validationResults,
+            consoleEntries : consoleEntries
           },
-          resultCount: validationResults.length,
-          perfTimings: marks.map(function(measure: any) {
+          issueCount: (validationResults.length+consoleEntries.length),
+          perfTimings: marks.map(function (measure: any) {
             var p = new PerfTiming();
-            p[measure.name]= measure.duration ;
+            p[measure.name] = measure.duration;
             return p;
           })
         };
         await browser.close();
         performance.clearMarks();
         performance.clearMeasures();
-        
-        return cosmos.create(d).then(function(document: NewDocument) {
-          return new Result(document.id, d.resultCount);
+
+        return cosmos.create(d).then(function (document: NewDocument) {
+          return new Result(document.id, d.issueCount);
         });
       })
       .catch(reason => {
-        debug.log("onRejected function called: " + reason);
+        console.log("onRejected function called: " + reason);
         return null;
       });
   }

@@ -39,7 +39,7 @@ export let details = async (req: any, res: any) => {
 export let analyse = async function (req: any, res: any) {
 
     var r = new Runner();
-    var delay=req.body.reqUrl;
+    var delay=req.body.delay;
     if(delay>5)
     {
         delay=5;  // Do not want people messing up with delay

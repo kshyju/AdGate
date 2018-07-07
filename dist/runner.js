@@ -24,12 +24,17 @@ class Runner {
             const puppeteer = require("puppeteer");
             const browser = yield puppeteer.launch({ headless: false });
             const page = yield browser.newPage();
+            let consoleEntries = [];
             page.on("console", function (msg) {
-                console.log('FROM PAGE : ' + msg.text());
+                /*  for (let i = 0; i < msg.args().length; ++i) {
+                   console.log(`${i}: ${msg.args()[i]}`);
+                 } */
+                //console.log('FROM PAGE : ' + msg.text());
+                consoleEntries.push(msg.text());
             });
             yield page.goto(url);
             if (delay > 0) {
-                yield page.waitFor(1000);
+                yield page.waitFor(delay * 1000);
             }
             performance.mark("imageRuleStart");
             return imageRule
@@ -43,10 +48,12 @@ class Runner {
                     const d = {
                         id: "",
                         url: url,
+                        delay: delay,
                         result: {
-                            image: validationResults
+                            image: validationResults,
+                            consoleEntries: consoleEntries
                         },
-                        resultCount: validationResults.length,
+                        issueCount: (validationResults.length + consoleEntries.length),
                         perfTimings: marks.map(function (measure) {
                             var p = new PerfTiming_1.PerfTiming();
                             p[measure.name] = measure.duration;
@@ -57,12 +64,12 @@ class Runner {
                     performance.clearMarks();
                     performance.clearMeasures();
                     return cosmos.create(d).then(function (document) {
-                        return new Result_1.Result(document.id, d.resultCount);
+                        return new Result_1.Result(document.id, d.issueCount);
                     });
                 });
             })
                 .catch(reason => {
-                debug.log("onRejected function called: " + reason);
+                console.log("onRejected function called: " + reason);
                 return null;
             });
         });

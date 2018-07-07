@@ -24,61 +24,69 @@
 
             </div>
         </div>
+
         <div class="row">
-            <div class="row">
-                <div class="col-12 bd-content" role="main">
-                    <form action="/analyse" method="post" id="frm-analyse">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Email URL to validate</label>
-                            <input type="text" id="reqUrl" placeholder="Enter URL" class="form-control" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Wait time(in seconds) before starting validation</label>
-                            <input type="number" class="form-control" id="delay" value="1" max="5">
-                            <small id="emailHelp" class="form-text text-muted">If your page is lazy loading images, it is better to wait a few seconds</small>
-                        </div>
+            <div class="col-12 bd-content" role="main">
+                <form action="/analyse" method="post" id="frm-analyse">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email URL to validate</label>
+                        <input type="text" id="reqUrl" placeholder="Enter URL" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Wait time(in seconds) before starting validation</label>
+                        <input type="number" class="form-control" id="delay" value="1" max="5">
+                        <small id="emailHelp" class="form-text text-muted">If your page is lazy loading images, it is better to wait a few seconds</small>
+                    </div>
 
-                        <button id="btn" type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
+                    <button id="btn" type="submit" class="btn btn-primary">Submit</button>
+                </form>
             </div>
-            <div id="progress"></div>
-            <div id="details"></div>
         </div>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script>
-            $(function () {
-                $("#frm-analyse").submit(function (e) {
-                    e.preventDefault();
-                    var $progress = $("#progress");
-                    var url = $(this).attr("action");
-                    var d = {
-                        reqUrl: $("#reqUrl").val(),
-                        delay :  $("#delay").val(),
-                    };
-                    $progress.html("Processing...");
-                    $.ajax({
-                        url: url,
-                        data: JSON.stringify(d),
-                        method: "post",
-                        contentType: "application/json"
-                    }).done(function (result) {
-                        console.log(result);
-                        var details =
-                            `<div class="alert alert-danger">${result.resultCount} issues found!</div><a target="_blank" href="/details/${result.id}">Click here to view details</a>`;
-                        $progress.html("Done!");
-                        $("#details").html(details);
-                        console.log(result);
-                    });
+        <div class="row">
+            <div class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content">
+                <div id="progress"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 bd-content">
+                <div id="details"></div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $("#frm-analyse").submit(function (e) {
+                e.preventDefault();
+                $btn=$("#btn");
+                $btn.prop("disabled",true);
+                var $progress = $("#progress");
+                var url = $(this).attr("action");
+                var d = {
+                    reqUrl: $("#reqUrl").val(),
+                    delay: $("#delay").val(),
+                };
+                $progress.html("Please be patient, this may take a few seconds...");
+                $.ajax({
+                    url: url,
+                    data: JSON.stringify(d),
+                    method: "post",
+                    contentType: "application/json"
+                }).done(function (result) {
+                    $btn.prop("disabled",false);
+                    var details =
+                        `<div class="alert alert-danger">${result.issueCount} issues found!</div><a target="_blank" href="/details/${result.id}">Click here to view details</a>`;
+                    $progress.html("Done!");
+                    $("#details").html(details);
                 });
-
-
-                //
-
-
             });
-        </script>
+
+
+            //
+
+
+        });
+    </script>
 </body>
 
 </html>
