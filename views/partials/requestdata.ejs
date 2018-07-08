@@ -1,0 +1,16 @@
+<h4>Network calls</h4>
+<% if(uniqueHostNames.length>5) { %>
+    <div class="alert alert-danger small">Too many domains (<%=  uniqueHostNames.length %>)</div>
+<% } else { %>
+<div class="alert alert-success small">No issues found :)</div>
+<% } %>
+
+<table class="table table-striped small">
+    <% uniqueHostNames.forEach(function(item) { %>
+        <tr>
+            <td>
+                <%= item %>
+            </td>
+        </tr>
+        <% }); %>
+</table>

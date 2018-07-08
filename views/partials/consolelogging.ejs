@@ -1,0 +1,17 @@
+<h4>Console logging</h4>
+<% if(model.result.consoleEntries.length>5) { %>
+    <div class="alert alert-danger small">Too many domains (<%=  model.result.consoleEntries.length %>)</div>
+<% } else { %>
+<div class="alert alert-success small">No issues found :)</div>
+<% } %>
+
+<table class="table table-striped small">
+    <% model.result.consoleEntries.forEach(function(item) { %>
+        <tr>
+            <td>
+                <%= item %>
+            </td>
+        </tr>
+        <% }); %>
+</table>
+

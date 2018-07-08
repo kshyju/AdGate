@@ -1,0 +1,22 @@
+<h4>Images</h4>
+<% if(model.result.image.length>0) { %>
+    <div class="alert alert-danger small">
+        <%=  model.result.image.length %> Issues.</div>
+    <% } else { %>
+        <div class="alert alert-success small"> No issues found :)</div>
+        <% } %>
+
+
+            <% model.result.image.forEach(function(item) { %>
+                <div class="validation-item">
+                    <div class="res-img">
+                        <img src='<%= item.url %>'>
+                    </div>
+                    <div class="res-msg">
+                        <%= item.naturalWidth %>*
+                            <%= item.naturalWidth %> has been scaled down to
+                                <%= item.computedWidth %>*
+                                    <%= item.computedWidth %>
+                    </div>
+                </div>
+                <% }); %>

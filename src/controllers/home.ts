@@ -4,6 +4,8 @@ import { Runner } from "../runner"
 import { Cosmos } from "../resultformatter/Cosmos";
 import { Debug } from "../debug";
 import { Result } from "../types/Result";
+const url = require('url');
+
 const debug = new Debug();
 
 /**
@@ -23,8 +25,27 @@ export let index = (req: Request, res: any) => {
 export let details = async (req: any, res: any) => {
     const mssql = new Cosmos();
     var resultItems = await mssql.getDocument(req.params.id).then(function(document:any){
-        debug.log(`document:${document}`);
-        res.render("details", { model: document });
+
+        console.log(29);
+        //console.log(document);
+        let requests:any[] = [];
+        Object.keys(document.result.requestEntries).forEach(function(key,index) {
+            //console.log(key);
+            requests.push(document.result.requestEntries[key]);
+        });
+        console.log(35);
+        var hostNames = requests.map(function(item:any) {
+            //console.log(url.parse(item.url));
+            return url.parse(item.url).hostname;
+        });
+        console.log(hostNames);
+        var uniqueHostNames = hostNames.filter((v, i, a) => a.indexOf(v) === i);
+        console.log('unique');
+        console.log(uniqueHostNames);
+
+
+
+        res.render("details", { model: document, uniqueHostNames:uniqueHostNames });
     }).catch(function(err){
         debug.log(`ERROR:${err}`);
         res.render("details", { resultItems: [] });

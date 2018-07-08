@@ -46,6 +46,7 @@ export class Runner {
     // 1. Get DOMContentLoaded time
     // 2. MB transferred
     // 3. Load time ?
+    // 4. Extra images being downloaded, but not being used(visible ?)
 
     return imageRule
       .validate(page)

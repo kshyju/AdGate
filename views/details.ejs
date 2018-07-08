@@ -74,51 +74,18 @@
                     <% } %>
 
                         <hr>
-                        <h4>Image scaling</h4>
-
-                        <% if(model.result.image.length>0) { %>
-                            <div class="alert alert-danger small">
-                                <%=  model.result.image.length %> Issues.</div>
-                            <% } else { %>
-                                <div class="alert alert-success small"> No issues found :)</div>
-                                <% } %>
 
 
-                                    <% model.result.image.forEach(function(item) { %>
-                                        <div class="validation-item">
-                                            <div class="res-img">
-                                                <img src='<%= item.url %>'>
-                                            </div>
-                                            <div class="res-msg">
-                                                <%= item.naturalWidth %>*
-                                                    <%= item.naturalWidth %> has been scaled down to
-                                                        <%= item.computedWidth %>*
-                                                            <%= item.computedWidth %>
-                                            </div>
+                        <% include partials/imagescaling %>
+                        <% include partials/requestdata %>
+                        <% include partials/consolelogging %>
+
+
+                        <hr/>
+                                        <div class="row">
+                                            <p class="text-muted small text-center">Waited <%=  model.delay %> seconds before analysis.</p>
+
                                         </div>
-                                        <% }); %>
-
-                                            <h4>Console logging</h4>
-                                            <% if(model.result.consoleEntries.length>0) { %>
-                                                <div class="alert alert-danger small">
-                                                    <%=  model.result.consoleEntries.length %> Issues.</div>
-                                                <% } else { %>
-                                                    <div class="alert alert-success small">No issues found :)</div>
-                                                    <% } %>
-
-                                                        <% model.result.consoleEntries.forEach(function(item) { %>
-                                                            <div class="validation-item">
-                                                                <div class="res-msg">
-                                                                    <%= item %>
-                                                                </div>
-                                                            </div>
-                                                            <% }); %>
-
-                                                            <hr/>
-                                                            <div class="row">
-                                                                <p class="text-muted small text-center">Waited <%=  model.delay %> seconds before analysis.Took <%=  model.perfTimings[0].imageValidation %> for image analysis</p>
-
-                                                            </div>
         </div>
 
     </div>
