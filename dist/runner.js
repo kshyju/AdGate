@@ -11,11 +11,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const image_1 = require("./rules/image");
 const debug_1 = require("./debug");
 const Result_1 = require("./types/Result");
-const PerfTiming_1 = require("./types/PerfTiming");
 const Cosmos_1 = require("./resultformatter/Cosmos");
-const { PerformanceObserver, performance } = require("perf_hooks");
+const requests_1 = require("./rules/requests");
+const Console_1 = require("./rules/Console");
+const errors_1 = require("./rules/errors");
 const debug = new debug_1.Debug();
 const imageRule = new image_1.ImageRule();
+const requestRule = new requests_1.Requests();
+const consoleRule = new Console_1.Console();
+const errorRule = new errors_1.Errors();
 var cosmos = new Cosmos_1.Cosmos();
 class Runner {
     runRules(url, delay) {
@@ -24,45 +28,39 @@ class Runner {
             const puppeteer = require("puppeteer");
             const browser = yield puppeteer.launch({ headless: false });
             const page = yield browser.newPage();
-            let consoleEntries = [];
-            page.on("console", function (msg) {
-                /*  for (let i = 0; i < msg.args().length; ++i) {
-                   console.log(`${i}: ${msg.args()[i]}`);
-                 } */
-                //console.log('FROM PAGE : ' + msg.text());
-                consoleEntries.push(msg.text());
-            });
+            //await page.setRequestInterception(true);
+            //Register the rules
+            consoleRule.listen(page);
+            requestRule.listen(page);
+            errorRule.listen(page);
             yield page.goto(url);
             if (delay > 0) {
                 yield page.waitFor(delay * 1000);
             }
-            performance.mark("imageRuleStart");
+            const errorEntries = errorRule.results();
+            const consoleEntries = consoleRule.results();
+            const requestEntries = requestRule.results();
+            // to do
+            // 1. Get DOMContentLoaded time
+            // 2. MB transferred
+            // 3. Load time ?
             return imageRule
                 .validate(page)
                 .then(function (validationResults) {
                 return __awaiter(this, void 0, void 0, function* () {
-                    performance.mark("imageRuleEnd");
-                    performance.measure("imageValidation", "imageRuleStart", "imageRuleEnd");
-                    const marks = performance.getEntriesByType("measure");
-                    performance.clearMarks();
                     const d = {
                         id: "",
                         url: url,
                         delay: delay,
                         result: {
                             image: validationResults,
-                            consoleEntries: consoleEntries
+                            consoleEntries: consoleEntries,
+                            requestEntries: requestEntries,
+                            errorEntries: errorEntries
                         },
-                        issueCount: (validationResults.length + consoleEntries.length),
-                        perfTimings: marks.map(function (measure) {
-                            var p = new PerfTiming_1.PerfTiming();
-                            p[measure.name] = measure.duration;
-                            return p;
-                        })
+                        issueCount: (validationResults.length + consoleEntries.length + requestEntries.length + errorEntries.length)
                     };
                     yield browser.close();
-                    performance.clearMarks();
-                    performance.clearMeasures();
                     return cosmos.create(d).then(function (document) {
                         return new Result_1.Result(document.id, d.issueCount);
                     });

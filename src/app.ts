@@ -1,7 +1,6 @@
 let express = require("express");
 import path from "path";
 import { Runner } from "./runner";
-import { MSSql } from "./resultformatter/MSSql";
 
 
 let bodyParser = require("body-parser");

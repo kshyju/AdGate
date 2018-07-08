@@ -1,14 +1,19 @@
 import { ImageRule } from "./rules/image";
 import { Debug } from "./debug";
 import { Result } from "./types/Result";
-import { PerfTiming } from "./types/PerfTiming";
-
 import { Cosmos } from "./resultformatter/Cosmos";
 import { NewDocument } from "documentdb";
-const { PerformanceObserver, performance } = require("perf_hooks");
+import { Requests } from './rules/requests';
+import { Console } from './rules/Console';
+import { Errors  } from './rules/errors';
+
 const debug = new Debug();
 
 const imageRule = new ImageRule();
+const requestRule = new Requests();
+const consoleRule = new Console();
+const errorRule = new Errors();
+
 var cosmos = new Cosmos();
 
 export class Runner {
@@ -20,35 +25,31 @@ export class Runner {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
+    //await page.setRequestInterception(true);
 
-    let consoleEntries: string[] = [];
 
-    page.on("console", function (msg: any) {
-     /*  for (let i = 0; i < msg.args().length; ++i) {
-        console.log(`${i}: ${msg.args()[i]}`);
-      } */
-      //console.log('FROM PAGE : ' + msg.text());
-      consoleEntries.push(msg.text())
-    });
+    //Register the rules
+    consoleRule.listen(page);
+    requestRule.listen(page);
+    errorRule.listen(page);
 
     await page.goto(url);
     if (delay > 0) {
       await page.waitFor(delay * 1000);
     }
 
-    performance.mark("imageRuleStart");
+    const errorEntries = errorRule.results();
+    const consoleEntries = consoleRule.results();
+    const requestEntries = requestRule.results();
+
+    // to do
+    // 1. Get DOMContentLoaded time
+    // 2. MB transferred
+    // 3. Load time ?
 
     return imageRule
       .validate(page)
       .then(async function (validationResults) {
-        performance.mark("imageRuleEnd");
-        performance.measure(
-          "imageValidation",
-          "imageRuleStart",
-          "imageRuleEnd"
-        );
-        const marks = performance.getEntriesByType("measure");
-        performance.clearMarks();
 
         const d = {
           id: "",
@@ -56,18 +57,15 @@ export class Runner {
           delay: delay,
           result: {
             image: validationResults,
-            consoleEntries : consoleEntries
+            consoleEntries : consoleEntries,
+            requestEntries:requestEntries,
+            errorEntries:errorEntries
           },
-          issueCount: (validationResults.length+consoleEntries.length),
-          perfTimings: marks.map(function (measure: any) {
-            var p = new PerfTiming();
-            p[measure.name] = measure.duration;
-            return p;
-          })
+          issueCount: (validationResults.length+consoleEntries.length + requestEntries.length + errorEntries.length)
+
         };
         await browser.close();
-        performance.clearMarks();
-        performance.clearMeasures();
+
 
         return cosmos.create(d).then(function (document: NewDocument) {
           return new Result(document.id, d.issueCount);
