@@ -7,7 +7,7 @@ const url = require("url");
 
 export class Requests {
   ruleResult = new RuleResult([]);
-  private reqData: any = {};
+  reqData: any = {};
 
   constructor() {
     this.ruleResult.recommendations = [];
@@ -16,6 +16,7 @@ export class Requests {
   listen(page: any) {
     let t = this;
     page.on("request", function(request: any) {
+      console.log('re',t.reqData);
       t.reqData[request._requestId] = {
         url: request._url,
         type: request._resourceType
@@ -29,6 +30,8 @@ export class Requests {
     });
 
     page.on("requestfinished", function(request: any) {
+      console.log('re2',t.reqData);
+
       var r = t.reqData[request._requestId];
       if (r != undefined) {
         r.status = request._response._status;
@@ -40,8 +43,9 @@ export class Requests {
   results(): RuleResult {
 
     let requests: any[] = [];
-    Object.keys(this.reqData).forEach(function(key, index) {
-      requests.push(this.reqData[key]);
+    let t=this;
+    Object.keys(t.reqData).forEach(function(key, index) {
+      requests.push(t.reqData[key]);
     });
 
     var hostNames = requests.map(function(item: any) {
@@ -85,7 +89,7 @@ export class Requests {
       redirectResponseStatus
     );
     this.ruleResult.recommendations.push(tooManyNetworkCalls);
-
+    //this.ruleResult.meta = this.requests;
     return this.ruleResult;
   }
 }
