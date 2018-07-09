@@ -1,12 +1,15 @@
 import { Debug } from "../debug";
 import { Result } from "../types/Result";
 import { resolve } from "url";
+import { RuleResult } from "../types/RuleResult";
+import { Recommendation } from "../types/Recommendation";
 const debug = new Debug();
 
 export class ImageRule {
   ruleName: string = "ImageRule";
+  ruleResult = new RuleResult([]);
 
-  async validate(page: any): Promise<Array<Result>> {
+  async validate(page: any): Promise<RuleResult> {
     debug.log("Inside ImageRule.validate");
 
     let validationFailures = await page.evaluate(() => {
@@ -50,10 +53,10 @@ export class ImageRule {
         computedHeight: number,
         computedWidth: number
       ) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
           const img = new Image();
           img.src = imageSrc;
-          img.onload = function () {
+          img.onload = function() {
             //console.log('image loaded.'+imageSrc);
             resolve({
               url: imageSrc,
@@ -63,7 +66,7 @@ export class ImageRule {
               naturalHeight: img.naturalHeight
             });
           };
-          img.onerror = function (e) {
+          img.onerror = function(e) {
             reject(e);
           };
         });
@@ -71,7 +74,7 @@ export class ImageRule {
 
       function processNonImageElements(elements: any, results: any): any {
         return new Promise((resolve, reject) => {
-         // debug.debug(`processing ${elements.length} non image elements`);
+          // debug.debug(`processing ${elements.length} non image elements`);
           var promiseArray = [];
           for (var i = 0; i < elements.length; i++) {
             let element = elements[i];
@@ -91,10 +94,10 @@ export class ImageRule {
             }
           }
 
-          Promise.all(promiseArray).then(function (items) {
+          Promise.all(promiseArray).then(function(items) {
             //debug.debug(`${items.length} images loaded for analysis`);
 
-            items.forEach(function (item) {
+            items.forEach(function(item) {
               validateDimension(item, results);
             });
             resolve(results);
@@ -131,7 +134,7 @@ export class ImageRule {
         }
 
         let nonImgElementsToLoad: any = document.querySelectorAll("div");
-        processNonImageElements(nonImgElementsToLoad, results).then(function (
+        processNonImageElements(nonImgElementsToLoad, results).then(function(
           a: any
         ) {
           //debug.debug("Non image elements validated");
@@ -140,6 +143,16 @@ export class ImageRule {
       });
     });
 
-    return validationFailures;
+    //Scaled Image Recommendation
+    let status = 1;
+    if (validationFailures > 1) {
+      status = 3;
+    }
+    var scaledImageRecommendation = new Recommendation("scaled-images", status);
+
+    var imageRuleResult = new RuleResult([]);
+    imageRuleResult.recommendations.push(scaledImageRecommendation);
+
+    return imageRuleResult;
   }
 }

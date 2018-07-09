@@ -3,9 +3,10 @@ import { Debug } from "./debug";
 import { Result } from "./types/Result";
 import { Cosmos } from "./resultformatter/Cosmos";
 import { NewDocument } from "documentdb";
-import { Requests } from './rules/requests';
-import { Console } from './rules/Console';
-import { Errors  } from './rules/errors';
+import { Requests } from "./rules/requests";
+import { Console } from "./rules/Console";
+import { Errors } from "./rules/errors";
+import { RuleResult } from "./types/RuleResult";
 
 const debug = new Debug();
 
@@ -27,7 +28,6 @@ export class Runner {
 
     //await page.setRequestInterception(true);
 
-
     //Register the rules
     consoleRule.listen(page);
     requestRule.listen(page);
@@ -38,9 +38,15 @@ export class Runner {
       await page.waitFor(delay * 1000);
     }
 
-    const errorEntries = errorRule.results();
-    const consoleEntries = consoleRule.results();
-    const requestEntries = requestRule.results();
+    var allRulesResults: RuleResult[] = [];
+
+    const errorEntries: RuleResult = errorRule.results();
+    const consoleEntries: RuleResult = consoleRule.results();
+    const requestEntries: RuleResult = requestRule.results();
+
+    allRulesResults.push(requestEntries);
+    allRulesResults.push(consoleEntries);
+    allRulesResults.push(errorEntries);
 
     // to do
     // 1. Get DOMContentLoaded time
@@ -50,26 +56,19 @@ export class Runner {
 
     return imageRule
       .validate(page)
-      .then(async function (validationResults) {
+      .then(async function(validationResults) {
+        allRulesResults.push(validationResults);
 
         const d = {
           id: "",
           url: url,
           delay: delay,
-          result: {
-            image: validationResults,
-            consoleEntries : consoleEntries,
-            requestEntries:requestEntries,
-            errorEntries:errorEntries
-          },
-          issueCount: (validationResults.length+consoleEntries.length + requestEntries.length + errorEntries.length)
-
+          ruleResults: allRulesResults
         };
         await browser.close();
 
-
-        return cosmos.create(d).then(function (document: NewDocument) {
-          return new Result(document.id, d.issueCount);
+        return cosmos.create(d).then(function(document: NewDocument) {
+          return new Result(document.id, 0);
         });
       })
       .catch(reason => {

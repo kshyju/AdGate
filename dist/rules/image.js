@@ -9,10 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const debug_1 = require("../debug");
+const RuleResult_1 = require("../types/RuleResult");
+const Recommendation_1 = require("../types/Recommendation");
 const debug = new debug_1.Debug();
 class ImageRule {
     constructor() {
         this.ruleName = "ImageRule";
+        this.ruleResult = new RuleResult_1.RuleResult([]);
     }
     validate(page) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -123,7 +126,15 @@ class ImageRule {
                     });
                 });
             });
-            return validationFailures;
+            //Scaled Image Recommendation
+            let status = 1;
+            if (validationFailures > 1) {
+                status = 3;
+            }
+            var scaledImageRecommendation = new Recommendation_1.Recommendation("scaled-images", status);
+            var imageRuleResult = new RuleResult_1.RuleResult([]);
+            imageRuleResult.recommendations.push(scaledImageRecommendation);
+            return imageRuleResult;
         });
     }
 }

@@ -1,8 +1,11 @@
 import { Debug } from "../debug";
 import { Result } from "../types/Result";
+import { RuleResult } from "../types/RuleResult";
+import { Recommendation } from "../types/Recommendation";
 
 export class Console {
-  consoleEntries: string[]=[];
+  ruleResult = new RuleResult([]);
+  private consoleEntries: string[]=[];
   listen(page: any) {
     let t = this;
     page.on("console", function(msg: any) {
@@ -10,7 +13,14 @@ export class Console {
     });
   }
 
-  results(): string[] {
-    return this.consoleEntries;
+  results(): RuleResult {
+    let status= this.consoleEntries.length==0?1:2;
+    var consoleLogRecommendation = new Recommendation(
+      "console-logs",
+      status
+    );
+
+     this.ruleResult.recommendations.push(consoleLogRecommendation);
+     return this.ruleResult;
   }
 }

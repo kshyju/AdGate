@@ -43,6 +43,8 @@ export let details = async (req: any, res: any) => {
         console.log('unique');
         console.log(uniqueHostNames);
 
+        // convert document to result view model
+
 
 
         res.render("details", { model: document, uniqueHostNames:uniqueHostNames });

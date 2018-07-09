@@ -37,9 +37,13 @@ class Runner {
             if (delay > 0) {
                 yield page.waitFor(delay * 1000);
             }
+            var allRulesResults = [];
             const errorEntries = errorRule.results();
             const consoleEntries = consoleRule.results();
             const requestEntries = requestRule.results();
+            allRulesResults.push(requestEntries);
+            allRulesResults.push(consoleEntries);
+            allRulesResults.push(errorEntries);
             // to do
             // 1. Get DOMContentLoaded time
             // 2. MB transferred
@@ -49,21 +53,16 @@ class Runner {
                 .validate(page)
                 .then(function (validationResults) {
                 return __awaiter(this, void 0, void 0, function* () {
+                    allRulesResults.push(validationResults);
                     const d = {
                         id: "",
                         url: url,
                         delay: delay,
-                        result: {
-                            image: validationResults,
-                            consoleEntries: consoleEntries,
-                            requestEntries: requestEntries,
-                            errorEntries: errorEntries
-                        },
-                        issueCount: (validationResults.length + consoleEntries.length + requestEntries.length + errorEntries.length)
+                        ruleResults: allRulesResults
                     };
                     yield browser.close();
                     return cosmos.create(d).then(function (document) {
-                        return new Result_1.Result(document.id, d.issueCount);
+                        return new Result_1.Result(document.id, 0);
                     });
                 });
             })
