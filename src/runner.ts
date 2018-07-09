@@ -29,8 +29,8 @@ export class Runner {
     //await page.setRequestInterception(true);
 
     //Register the rules
-    consoleRule.listen(page);
-    requestRule.listen(page);
+    //consoleRule.listen(page);
+   // requestRule.listen(page);
     errorRule.listen(page);
 
     await page.goto(url);
@@ -40,13 +40,13 @@ export class Runner {
 
     var allRulesResults: RuleResult[] = [];
 
-    const errorEntries: RuleResult = errorRule.results();
-    const consoleEntries: RuleResult = consoleRule.results();
-    const requestEntries: RuleResult = requestRule.results();
+    //const errorEntries: RuleResult = await errorRule.results();
+    //const consoleEntries: RuleResult = consoleRule.results();
+    //const requestEntries: RuleResult = requestRule.results();
 
-    allRulesResults.push(requestEntries);
-    allRulesResults.push(consoleEntries);
-    allRulesResults.push(errorEntries);
+    //allRulesResults.push(requestEntries);
+   // allRulesResults.push(consoleEntries);
+    //allRulesResults.push(errorEntries);
 
     // to do
     // 1. Get DOMContentLoaded time
@@ -54,26 +54,27 @@ export class Runner {
     // 3. Load time ?
     // 4. Extra images being downloaded, but not being used(visible ?)
 
-    return imageRule
-      .validate(page)
-      .then(async function(validationResults) {
-        allRulesResults.push(validationResults);
+    var promiseArray= new Array<Promise<any>>();
+    promiseArray.push(errorRule.results());
+    //promiseArray.push(imageRule.validate(page));
+   // promiseArray.push(requestRule.results());
 
-        const d = {
-          id: "",
-          url: url,
-          delay: delay,
-          ruleResults: allRulesResults
-        };
-        await browser.close();
+   var result = Promise.all(promiseArray).then(async (result:any) => {
 
-        return cosmos.create(d).then(function(document: NewDocument) {
-          return new Result(document.id, 0);
-        });
-      })
-      .catch(reason => {
-        console.log("onRejected function called: " + reason);
-        return null;
-      });
+      console.log('RESULT',result);
+      await browser.close();
+
+
+    }).then((res:any)=>{
+      var r = new Result("a",2);
+      return r;
+    }).catch(()=>{
+
+      var r = new Result("a",2);
+      return r;
+    });
+
+    return result;
+
   }
 }

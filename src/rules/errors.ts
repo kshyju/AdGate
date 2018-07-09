@@ -2,6 +2,7 @@ import { Debug } from "../debug";
 import { Result } from "../types/Result";
 import { RuleResult } from "../types/RuleResult";
 import { Recommendation } from "../types/Recommendation";
+import { resolve } from "url";
 
 export class Errors {
   ruleResult = new RuleResult([]);
@@ -14,14 +15,19 @@ export class Errors {
     });
   }
 
-  results(): RuleResult {
-    let status= this.errorEntries.length==0?1:2;
-    var errorRecommendation = new Recommendation(
-      "console-errors",
-      status
-    );
+  results(): Promise<RuleResult> {
 
-     this.ruleResult.recommendations.push(errorRecommendation);
-     return this.ruleResult;
+    return new Promise(function(resolve:any,reject:any) {
+
+      let status= this.errorEntries.length==0?1:2;
+      var errorRecommendation = new Recommendation(
+        "console-errors",
+        status
+      );
+
+       this.ruleResult.recommendations.push(errorRecommendation);
+       return resolve(this.ruleResult);
+
+    });
   }
 }

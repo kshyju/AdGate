@@ -16,7 +16,6 @@ export class Requests {
   listen(page: any) {
     let t = this;
     page.on("request", function(request: any) {
-      console.log('re',t.reqData);
       t.reqData[request._requestId] = {
         url: request._url,
         type: request._resourceType
@@ -30,7 +29,6 @@ export class Requests {
     });
 
     page.on("requestfinished", function(request: any) {
-      console.log('re2',t.reqData);
 
       var r = t.reqData[request._requestId];
       if (r != undefined) {

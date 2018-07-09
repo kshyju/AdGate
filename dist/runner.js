@@ -30,46 +30,40 @@ class Runner {
             const page = yield browser.newPage();
             //await page.setRequestInterception(true);
             //Register the rules
-            consoleRule.listen(page);
-            requestRule.listen(page);
+            //consoleRule.listen(page);
+            // requestRule.listen(page);
             errorRule.listen(page);
             yield page.goto(url);
             if (delay > 0) {
                 yield page.waitFor(delay * 1000);
             }
             var allRulesResults = [];
-            const errorEntries = errorRule.results();
-            const consoleEntries = consoleRule.results();
-            const requestEntries = requestRule.results();
-            allRulesResults.push(requestEntries);
-            allRulesResults.push(consoleEntries);
-            allRulesResults.push(errorEntries);
+            //const errorEntries: RuleResult = await errorRule.results();
+            //const consoleEntries: RuleResult = consoleRule.results();
+            //const requestEntries: RuleResult = requestRule.results();
+            //allRulesResults.push(requestEntries);
+            // allRulesResults.push(consoleEntries);
+            //allRulesResults.push(errorEntries);
             // to do
             // 1. Get DOMContentLoaded time
             // 2. MB transferred
             // 3. Load time ?
             // 4. Extra images being downloaded, but not being used(visible ?)
-            return imageRule
-                .validate(page)
-                .then(function (validationResults) {
-                return __awaiter(this, void 0, void 0, function* () {
-                    allRulesResults.push(validationResults);
-                    const d = {
-                        id: "",
-                        url: url,
-                        delay: delay,
-                        ruleResults: allRulesResults
-                    };
-                    yield browser.close();
-                    return cosmos.create(d).then(function (document) {
-                        return new Result_1.Result(document.id, 0);
-                    });
-                });
-            })
-                .catch(reason => {
-                console.log("onRejected function called: " + reason);
-                return null;
+            var promiseArray = new Array();
+            promiseArray.push(errorRule.results());
+            //promiseArray.push(imageRule.validate(page));
+            // promiseArray.push(requestRule.results());
+            var result = Promise.all(promiseArray).then((result) => __awaiter(this, void 0, void 0, function* () {
+                console.log('RESULT', result);
+                yield browser.close();
+            })).then((res) => {
+                var r = new Result_1.Result("a", 2);
+                return r;
+            }).catch(() => {
+                var r = new Result_1.Result("a", 2);
+                return r;
             });
+            return result;
         });
     }
 }
