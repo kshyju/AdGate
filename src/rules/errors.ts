@@ -17,16 +17,18 @@ export class Errors {
 
   results(): Promise<RuleResult> {
 
+    console.log('errors 20');
+    let t= this;
     return new Promise(function(resolve:any,reject:any) {
 
-      let status= this.errorEntries.length==0?1:2;
+      let status= t.errorEntries.length==0?1:2;
       var errorRecommendation = new Recommendation(
         "console-errors",
         status
       );
 
-       this.ruleResult.recommendations.push(errorRecommendation);
-       return resolve(this.ruleResult);
+       t.ruleResult.recommendations.push(errorRecommendation);
+       return resolve(t.ruleResult);
 
     });
   }

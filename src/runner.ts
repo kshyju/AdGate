@@ -55,13 +55,16 @@ export class Runner {
     // 4. Extra images being downloaded, but not being used(visible ?)
 
     var promiseArray= new Array<Promise<any>>();
-    promiseArray.push(errorRule.results());
-    //promiseArray.push(imageRule.validate(page));
-   // promiseArray.push(requestRule.results());
+    //promiseArray.push(errorRule.results());
+    promiseArray.push(imageRule.validate(page));
+   // promiseArray.push(requestRule.results()); 73562 23164
 
-   var result = Promise.all(promiseArray).then(async (result:any) => {
+   var result =
+   //Promise.all(promiseArray).
+   imageRule.validate(page).
+   then(async (result:any) => {
 
-      console.log('RESULT',result);
+      console.log('RESULT', JSON.stringify(result));
       await browser.close();
 
 

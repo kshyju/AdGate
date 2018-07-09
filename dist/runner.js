@@ -50,11 +50,14 @@ class Runner {
             // 3. Load time ?
             // 4. Extra images being downloaded, but not being used(visible ?)
             var promiseArray = new Array();
-            promiseArray.push(errorRule.results());
-            //promiseArray.push(imageRule.validate(page));
-            // promiseArray.push(requestRule.results());
-            var result = Promise.all(promiseArray).then((result) => __awaiter(this, void 0, void 0, function* () {
-                console.log('RESULT', result);
+            //promiseArray.push(errorRule.results());
+            promiseArray.push(imageRule.validate(page));
+            // promiseArray.push(requestRule.results()); 73562 23164
+            var result = 
+            //Promise.all(promiseArray).
+            imageRule.validate(page).
+                then((result) => __awaiter(this, void 0, void 0, function* () {
+                console.log('RESULT', JSON.stringify(result));
                 yield browser.close();
             })).then((res) => {
                 var r = new Result_1.Result("a", 2);

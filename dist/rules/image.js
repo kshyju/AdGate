@@ -119,6 +119,7 @@ class ImageRule {
                         let p = getDimensionForImage(element);
                         validateDimension(p, results);
                     }
+                    //to do : This 2 (img, and non image)has to be inside Promise.all
                     let nonImgElementsToLoad = document.querySelectorAll("div");
                     processNonImageElements(nonImgElementsToLoad, results).then(function (a) {
                         //debug.debug("Non image elements validated");
