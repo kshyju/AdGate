@@ -18,7 +18,7 @@ const errorRule = new Errors();
 var cosmos = new Cosmos();
 
 export class Runner {
-  public async runRules(url: string, delay: number): Promise<Result> {
+  public async runRules(url: string, delay: number, includeMeta: boolean): Promise<Result> {
     debug.log(`Analyzing URL:${url}`);
 
     const puppeteer = require("puppeteer");
@@ -26,11 +26,16 @@ export class Runner {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
+
+     page.on("console", function(msg: any) {
+       console.log(msg.text());
+     });
+
     //await page.setRequestInterception(true);
 
     //Register the rules
     //consoleRule.listen(page);
-   // requestRule.listen(page);
+    requestRule.listen(page);
     errorRule.listen(page);
 
     await page.goto(url);
@@ -45,7 +50,7 @@ export class Runner {
     //const requestEntries: RuleResult = requestRule.results();
 
     //allRulesResults.push(requestEntries);
-   // allRulesResults.push(consoleEntries);
+    // allRulesResults.push(consoleEntries);
     //allRulesResults.push(errorEntries);
 
     // to do
@@ -54,28 +59,29 @@ export class Runner {
     // 3. Load time ?
     // 4. Extra images being downloaded, but not being used(visible ?)
 
-    var promiseArray= new Array<Promise<any>>();
-    //promiseArray.push(errorRule.results());
-    promiseArray.push(imageRule.validate(page));
-   // promiseArray.push(requestRule.results()); 73562 23164
+    var promiseArray = new Array<Promise<any>>();
 
-   var result =
-   //Promise.all(promiseArray).
-   imageRule.validate(page).
-   then(async (result:any) => {
+    promiseArray.push(errorRule.results(includeMeta));
+    promiseArray.push(imageRule.validate(page, includeMeta));
+    promiseArray.push(requestRule.results(includeMeta));
 
-      console.log('RESULT', JSON.stringify(result));
-      await browser.close();
+    var result =
+      Promise.all(promiseArray).
+        //imageRule.validate(page,includeMeta).
+        then(async (result: any) => {
+
+          console.log('RESULT', JSON.stringify(result));
+          await browser.close();
 
 
-    }).then((res:any)=>{
-      var r = new Result("a",2);
-      return r;
-    }).catch(()=>{
+        }).then((res: any) => {
+          var r = new Result("a", 2);
+          return r;
+        }).catch(() => {
 
-      var r = new Result("a",2);
-      return r;
-    });
+          var r = new Result("a", 2);
+          return r;
+        });
 
     return result;
 

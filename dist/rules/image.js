@@ -17,9 +17,8 @@ class ImageRule {
         this.ruleName = "ImageRule";
         this.ruleResult = new RuleResult_1.RuleResult([]);
     }
-    validate(page) {
+    validate(page, includeMeta) {
         return __awaiter(this, void 0, void 0, function* () {
-            debug.log("Inside ImageRule.validate");
             let validationFailures = yield page.evaluate(() => {
                 function getImageUrl(s) {
                     //could be in bg
@@ -114,27 +113,29 @@ class ImageRule {
                 return new Promise((resolve, reject) => {
                     var results = [];
                     let imgElements = document.querySelectorAll("img");
-                    //debug.debug(`Processing ${imgElements.length} image elements`);
                     for (var element of imgElements) {
                         let p = getDimensionForImage(element);
                         validateDimension(p, results);
                     }
                     //to do : This 2 (img, and non image)has to be inside Promise.all
                     let nonImgElementsToLoad = document.querySelectorAll("div");
-                    processNonImageElements(nonImgElementsToLoad, results).then(function (a) {
-                        //debug.debug("Non image elements validated");
+                    processNonImageElements(nonImgElementsToLoad, results)
+                        .then(function (a) {
                         resolve(results);
                     });
                 });
             });
             //Scaled Image Recommendation
             let status = 1;
-            if (validationFailures > 1) {
+            if (validationFailures.length > 1) {
                 status = 3;
             }
             var scaledImageRecommendation = new Recommendation_1.Recommendation("scaled-images", status);
             var imageRuleResult = new RuleResult_1.RuleResult([]);
             imageRuleResult.recommendations.push(scaledImageRecommendation);
+            if (includeMeta) {
+                imageRuleResult.meta = validationFailures;
+            }
             return imageRuleResult;
         });
     }

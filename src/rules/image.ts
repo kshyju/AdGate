@@ -9,8 +9,7 @@ export class ImageRule {
   ruleName: string = "ImageRule";
   ruleResult = new RuleResult([]);
 
-  async validate(page: any): Promise<RuleResult> {
-    debug.log("Inside ImageRule.validate");
+  async validate(page: any, includeMeta:boolean): Promise<RuleResult> {
 
     let validationFailures = await page.evaluate(() => {
       function getImageUrl(s: any) {
@@ -126,7 +125,6 @@ export class ImageRule {
       return new Promise((resolve, reject) => {
         var results: any[] = [];
         let imgElements: any = document.querySelectorAll("img");
-        //debug.debug(`Processing ${imgElements.length} image elements`);
 
         for (var element of imgElements) {
           let p = getDimensionForImage(element);
@@ -136,10 +134,9 @@ export class ImageRule {
         //to do : This 2 (img, and non image)has to be inside Promise.all
 
         let nonImgElementsToLoad: any = document.querySelectorAll("div");
-        processNonImageElements(nonImgElementsToLoad, results).then(function(
-          a: any
-        ) {
-          //debug.debug("Non image elements validated");
+       
+        processNonImageElements(nonImgElementsToLoad, results)
+        .then(function(a: any) {
           resolve(results);
         });
       });
@@ -147,14 +144,18 @@ export class ImageRule {
 
     //Scaled Image Recommendation
     let status = 1;
-    if (validationFailures > 1) {
+    if (validationFailures.length > 1) {
       status = 3;
     }
     var scaledImageRecommendation = new Recommendation("scaled-images", status);
 
     var imageRuleResult = new RuleResult([]);
     imageRuleResult.recommendations.push(scaledImageRecommendation);
-
+    if(includeMeta)
+    {
+      imageRuleResult.meta = validationFailures;
+    }
+    
     return imageRuleResult;
   }
 }

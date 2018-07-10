@@ -22,16 +22,19 @@ const consoleRule = new Console_1.Console();
 const errorRule = new errors_1.Errors();
 var cosmos = new Cosmos_1.Cosmos();
 class Runner {
-    runRules(url, delay) {
+    runRules(url, delay, includeMeta) {
         return __awaiter(this, void 0, void 0, function* () {
             debug.log(`Analyzing URL:${url}`);
             const puppeteer = require("puppeteer");
             const browser = yield puppeteer.launch({ headless: false });
             const page = yield browser.newPage();
+            page.on("console", function (msg) {
+                console.log(msg.text());
+            });
             //await page.setRequestInterception(true);
             //Register the rules
             //consoleRule.listen(page);
-            // requestRule.listen(page);
+            requestRule.listen(page);
             errorRule.listen(page);
             yield page.goto(url);
             if (delay > 0) {
@@ -50,12 +53,11 @@ class Runner {
             // 3. Load time ?
             // 4. Extra images being downloaded, but not being used(visible ?)
             var promiseArray = new Array();
-            //promiseArray.push(errorRule.results());
-            promiseArray.push(imageRule.validate(page));
-            // promiseArray.push(requestRule.results()); 73562 23164
-            var result = 
-            //Promise.all(promiseArray).
-            imageRule.validate(page).
+            promiseArray.push(errorRule.results(includeMeta));
+            promiseArray.push(imageRule.validate(page, includeMeta));
+            promiseArray.push(requestRule.results(includeMeta));
+            var result = Promise.all(promiseArray).
+                //imageRule.validate(page,includeMeta).
                 then((result) => __awaiter(this, void 0, void 0, function* () {
                 console.log('RESULT', JSON.stringify(result));
                 yield browser.close();

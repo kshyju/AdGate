@@ -15,9 +15,8 @@ export class Errors {
     });
   }
 
-  results(): Promise<RuleResult> {
+  results(includeMeta: boolean): Promise<RuleResult> {
 
-    console.log('errors 20');
     let t= this;
     return new Promise(function(resolve:any,reject:any) {
 
@@ -26,7 +25,10 @@ export class Errors {
         "console-errors",
         status
       );
-
+      if(includeMeta)
+      {
+        t.ruleResult.meta = t.errorEntries;
+      }
        t.ruleResult.recommendations.push(errorRecommendation);
        return resolve(t.ruleResult);
 

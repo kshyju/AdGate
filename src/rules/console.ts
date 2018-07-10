@@ -5,7 +5,7 @@ import { Recommendation } from "../types/Recommendation";
 
 export class Console {
   ruleResult = new RuleResult([]);
-  private consoleEntries: string[]=[];
+  consoleEntries: string[]=[];
   listen(page: any) {
     let t = this;
     page.on("console", function(msg: any) {
@@ -13,14 +13,16 @@ export class Console {
     });
   }
 
-  results(): RuleResult {
-    let status= this.consoleEntries.length==0?1:2;
-    var consoleLogRecommendation = new Recommendation(
-      "console-logs",
-      status
-    );
+  results(): Promise<RuleResult> {
+    let t=this;
+    return new Promise(function(resolve:any,reject:any) {
 
-     this.ruleResult.recommendations.push(consoleLogRecommendation);
-     return this.ruleResult;
+      let status= t.consoleEntries.length==0?1:2;
+      var a = new Recommendation("console-logs", status);
+
+       t.ruleResult.recommendations.push(a);
+       return resolve(t.ruleResult);
+
+    });   
   }
 }
