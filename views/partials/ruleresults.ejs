@@ -1,0 +1,20 @@
+<h4>Rule Results</h4>
+<% include ../viewhelpers %>
+
+
+<div>
+    <% model.ruleResults.forEach(function(ruleResult) { %>
+        <div>
+            <h3><%= ruleResult.name %></h3>
+            <div>
+                <% ruleResult.recommendations.forEach(function(recommendation) { %>
+                    <div class="alert <%= getStatusClass(recommendation.status) %>">
+
+                        <%= recommendation.name %> :  <%= recommendation.status %>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    <% }); %>
+</div>
+

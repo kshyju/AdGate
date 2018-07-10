@@ -6,8 +6,6 @@ import { Recommendation } from "../types/Recommendation";
 const debug = new Debug();
 
 export class ImageRule {
-  ruleName: string = "ImageRule";
-  ruleResult = new RuleResult([]);
 
   async validate(page: any, includeMeta:boolean): Promise<RuleResult> {
 
@@ -134,7 +132,7 @@ export class ImageRule {
         //to do : This 2 (img, and non image)has to be inside Promise.all
 
         let nonImgElementsToLoad: any = document.querySelectorAll("div");
-       
+
         processNonImageElements(nonImgElementsToLoad, results)
         .then(function(a: any) {
           resolve(results);
@@ -149,13 +147,13 @@ export class ImageRule {
     }
     var scaledImageRecommendation = new Recommendation("scaled-images", status);
 
-    var imageRuleResult = new RuleResult([]);
+    var imageRuleResult = new RuleResult("image");
     imageRuleResult.recommendations.push(scaledImageRecommendation);
     if(includeMeta)
     {
       imageRuleResult.meta = validationFailures;
     }
-    
+
     return imageRuleResult;
   }
 }

@@ -2,12 +2,11 @@ import { Debug } from "../debug";
 import { Result } from "../types/Result";
 import { RuleResult } from "../types/RuleResult";
 import { Recommendation } from "../types/Recommendation";
-import { Z_FILTERED } from "zlib";
 
 const url = require("url");
 
 export class Requests {
-  ruleResult = new RuleResult([]);
+  ruleResult = new RuleResult("requests");
   reqData: any = {};
 
   constructor() {
@@ -70,13 +69,12 @@ export class Requests {
 
       // Recommendation for too many external calls
       var tooManyNetworkCallsStatus = 1;
-      console.log('(hostNames.length ', hostNames.length);
+
       if (hostNames.length > 4 && hostNames.length <= 7) {
         tooManyNetworkCallsStatus = 2;
       } else if (hostNames.length > 7) {
         tooManyNetworkCallsStatus = 3;
       }
-      console.log('tooManyNetworkCallsStatus', tooManyNetworkCallsStatus);
 
       var tooManyNetworkCalls = new Recommendation(
         "too-many-network-calls",

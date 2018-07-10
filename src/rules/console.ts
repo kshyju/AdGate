@@ -4,8 +4,8 @@ import { RuleResult } from "../types/RuleResult";
 import { Recommendation } from "../types/Recommendation";
 
 export class Console {
-  ruleResult = new RuleResult([]);
-  consoleEntries: string[]=[];
+  ruleResult = new RuleResult("console");
+  consoleEntries: string[] = [];
   listen(page: any) {
     let t = this;
     page.on("console", function(msg: any) {
@@ -13,16 +13,17 @@ export class Console {
     });
   }
 
-  results(): Promise<RuleResult> {
-    let t=this;
-    return new Promise(function(resolve:any,reject:any) {
+  results(includeMeta: boolean): Promise<RuleResult> {
+    let t = this;
+    return new Promise(function(resolve: any, reject: any) {
+      let status = t.consoleEntries.length == 0 ? 1 : 2;
+      var consoleRecommendation = new Recommendation("console-logs", status);
 
-      let status= t.consoleEntries.length==0?1:2;
-      var a = new Recommendation("console-logs", status);
-
-       t.ruleResult.recommendations.push(a);
-       return resolve(t.ruleResult);
-
-    });   
+      if (includeMeta) {
+        t.ruleResult.meta = t.consoleEntries;
+      }
+      t.ruleResult.recommendations.push(consoleRecommendation);
+      return resolve(t.ruleResult);
+    });
   }
 }

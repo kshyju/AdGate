@@ -1,3 +1,12 @@
+
+
+
+return cosmos.create(d).then(function(document: NewDocument) {
+    -        return cosmos.create(d).then(function (document: NewDocument) {	+          return new Result(document.id, 0);
+    -          return new Result(document.id, d.issueCount);
+             });	         });
+
+
 {
     "_id": "5b425476d1f20c000f89c61b",
     "tag": "6106f9d8-7fe8-407a-b2d2-870ba4e3f495",

@@ -26,28 +26,21 @@ export let details = async (req: any, res: any) => {
     const mssql = new Cosmos();
     var resultItems = await mssql.getDocument(req.params.id).then(function(document:any){
 
-        console.log(29);
+        //console.log(29);
         //console.log(document);
-        let requests:any[] = [];
-        Object.keys(document.result.requestEntries).forEach(function(key,index) {
+        let recommendations:any[] = [];
+
+
+        document.ruleResults.map(function(ruleResult:any) {
             //console.log(key);
-            requests.push(document.result.requestEntries[key]);
+            recommendations.push(...ruleResult.recommendations);
+
         });
-        console.log(35);
-        var hostNames = requests.map(function(item:any) {
-            //console.log(url.parse(item.url));
-            return url.parse(item.url).hostname;
-        });
-        console.log(hostNames);
-        var uniqueHostNames = hostNames.filter((v, i, a) => a.indexOf(v) === i);
-        console.log('unique');
-        console.log(uniqueHostNames);
-
-        // convert document to result view model
+        console.log(recommendations);
 
 
 
-        res.render("details", { model: document, uniqueHostNames:uniqueHostNames });
+        res.render("details", { model: document});
     }).catch(function(err){
         debug.log(`ERROR:${err}`);
         res.render("details", { resultItems: [] });

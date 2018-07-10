@@ -28,19 +28,19 @@ class Runner {
             const puppeteer = require("puppeteer");
             const browser = yield puppeteer.launch({ headless: false });
             const page = yield browser.newPage();
-            page.on("console", function (msg) {
-                console.log(msg.text());
-            });
+            /*     page.on("console", function(msg: any) {
+              console.log(msg.text());
+            }); */
             //await page.setRequestInterception(true);
             //Register the rules
-            //consoleRule.listen(page);
+            consoleRule.listen(page);
             requestRule.listen(page);
             errorRule.listen(page);
             yield page.goto(url);
             if (delay > 0) {
                 yield page.waitFor(delay * 1000);
             }
-            var allRulesResults = [];
+            let allRulesResults = [];
             //const errorEntries: RuleResult = await errorRule.results();
             //const consoleEntries: RuleResult = consoleRule.results();
             //const requestEntries: RuleResult = requestRule.results();
@@ -53,20 +53,25 @@ class Runner {
             // 3. Load time ?
             // 4. Extra images being downloaded, but not being used(visible ?)
             var promiseArray = new Array();
+            promiseArray.push(consoleRule.results(includeMeta));
             promiseArray.push(errorRule.results(includeMeta));
             promiseArray.push(imageRule.validate(page, includeMeta));
             promiseArray.push(requestRule.results(includeMeta));
-            var result = Promise.all(promiseArray).
-                //imageRule.validate(page,includeMeta).
-                then((result) => __awaiter(this, void 0, void 0, function* () {
-                console.log('RESULT', JSON.stringify(result));
+            var result = Promise.all(promiseArray)
+                .then((result) => __awaiter(this, void 0, void 0, function* () {
                 yield browser.close();
-            })).then((res) => {
-                var r = new Result_1.Result("a", 2);
-                return r;
-            }).catch(() => {
-                var r = new Result_1.Result("a", 2);
-                return r;
+                const d = {
+                    id: "",
+                    url: url,
+                    delay: delay,
+                    ruleResults: result
+                };
+                return cosmos.create(d).then(function (document) {
+                    return new Result_1.Result(document.id, 0);
+                });
+            }))
+                .catch(() => {
+                return new Result_1.Result("", 0);
             });
             return result;
         });

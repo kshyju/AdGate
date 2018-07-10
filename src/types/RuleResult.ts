@@ -2,11 +2,12 @@ import { Recommendation } from "./Recommendation";
 
 export class RuleResult {
 
+    public name: string;
     public recommendations: Recommendation[];
     public meta:any;
-    constructor(recommendations:Recommendation[])
+    constructor(name: string)
     {
-      this.recommendations = recommendations;
-
+      this.name = name;
+      this.recommendations=[];
     }
   }

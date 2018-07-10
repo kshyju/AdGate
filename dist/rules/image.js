@@ -13,10 +13,6 @@ const RuleResult_1 = require("../types/RuleResult");
 const Recommendation_1 = require("../types/Recommendation");
 const debug = new debug_1.Debug();
 class ImageRule {
-    constructor() {
-        this.ruleName = "ImageRule";
-        this.ruleResult = new RuleResult_1.RuleResult([]);
-    }
     validate(page, includeMeta) {
         return __awaiter(this, void 0, void 0, function* () {
             let validationFailures = yield page.evaluate(() => {
@@ -131,7 +127,7 @@ class ImageRule {
                 status = 3;
             }
             var scaledImageRecommendation = new Recommendation_1.Recommendation("scaled-images", status);
-            var imageRuleResult = new RuleResult_1.RuleResult([]);
+            var imageRuleResult = new RuleResult_1.RuleResult("image");
             imageRuleResult.recommendations.push(scaledImageRecommendation);
             if (includeMeta) {
                 imageRuleResult.meta = validationFailures;

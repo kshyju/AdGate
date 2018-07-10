@@ -18,7 +18,11 @@ const errorRule = new Errors();
 var cosmos = new Cosmos();
 
 export class Runner {
-  public async runRules(url: string, delay: number, includeMeta: boolean): Promise<Result> {
+  public async runRules(
+    url: string,
+    delay: number,
+    includeMeta: boolean
+  ): Promise<Result> {
     debug.log(`Analyzing URL:${url}`);
 
     const puppeteer = require("puppeteer");
@@ -26,15 +30,14 @@ export class Runner {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
-
-     page.on("console", function(msg: any) {
-       console.log(msg.text());
-     });
+    /*     page.on("console", function(msg: any) {
+      console.log(msg.text());
+    }); */
 
     //await page.setRequestInterception(true);
 
     //Register the rules
-    //consoleRule.listen(page);
+    consoleRule.listen(page);
     requestRule.listen(page);
     errorRule.listen(page);
 
@@ -43,7 +46,7 @@ export class Runner {
       await page.waitFor(delay * 1000);
     }
 
-    var allRulesResults: RuleResult[] = [];
+    let allRulesResults: RuleResult[] = [];
 
     //const errorEntries: RuleResult = await errorRule.results();
     //const consoleEntries: RuleResult = consoleRule.results();
@@ -61,29 +64,30 @@ export class Runner {
 
     var promiseArray = new Array<Promise<any>>();
 
+    promiseArray.push(consoleRule.results(includeMeta));
+
     promiseArray.push(errorRule.results(includeMeta));
     promiseArray.push(imageRule.validate(page, includeMeta));
     promiseArray.push(requestRule.results(includeMeta));
 
-    var result =
-      Promise.all(promiseArray).
-        //imageRule.validate(page,includeMeta).
-        then(async (result: any) => {
+    var result = Promise.all(promiseArray)
+      .then(async (result: any) => {
+        await browser.close();
 
-          console.log('RESULT', JSON.stringify(result));
-          await browser.close();
-
-
-        }).then((res: any) => {
-          var r = new Result("a", 2);
-          return r;
-        }).catch(() => {
-
-          var r = new Result("a", 2);
-          return r;
+        const d = {
+          id: "",
+          url: url,
+          delay: delay,
+          ruleResults: result
+        };
+        return cosmos.create(d).then(function(document: NewDocument) {
+          return new Result(document.id, 0);
         });
+      })
+      .catch(() => {
+        return new Result("", 0);
+      });
 
     return result;
-
   }
 }

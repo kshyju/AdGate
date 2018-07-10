@@ -5,9 +5,9 @@ import { Recommendation } from "../types/Recommendation";
 import { resolve } from "url";
 
 export class Errors {
-  ruleResult = new RuleResult([]);
+  ruleResult = new RuleResult("errors");
 
-  errorEntries: string[]=[];
+  errorEntries: string[] = [];
   listen(page: any) {
     let t = this;
     page.on("error", function(msg: any) {
@@ -16,22 +16,15 @@ export class Errors {
   }
 
   results(includeMeta: boolean): Promise<RuleResult> {
-
-    let t= this;
-    return new Promise(function(resolve:any,reject:any) {
-
-      let status= t.errorEntries.length==0?1:2;
-      var errorRecommendation = new Recommendation(
-        "console-errors",
-        status
-      );
-      if(includeMeta)
-      {
+    let t = this;
+    return new Promise(function(resolve: any, reject: any) {
+      let status = t.errorEntries.length == 0 ? 1 : 2;
+      var errorRecommendation = new Recommendation("console-errors", status);
+      if (includeMeta) {
         t.ruleResult.meta = t.errorEntries;
       }
-       t.ruleResult.recommendations.push(errorRecommendation);
-       return resolve(t.ruleResult);
-
+      t.ruleResult.recommendations.push(errorRecommendation);
+      return resolve(t.ruleResult);
     });
   }
 }

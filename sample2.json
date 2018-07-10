@@ -1,0 +1,22 @@
+[{
+    "recommendations": [{
+        "title": "console-errors",
+        "status": 1
+    }]
+}, {
+    "recommendations": [{
+        "title": "scaled-images",
+        "status": 1
+    }]
+}, {
+    "recommendations": [{
+        "title": "dns",
+        "status": 1
+    }, {
+        "title": "too-many-network-calls",
+        "status": 1
+    }, {
+        "title": "redirects",
+        "status": 1
+    }]
+}]
