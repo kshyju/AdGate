@@ -1,0 +1,36 @@
+<div>
+    <h3>Image Scaling</h4>
+    <p>Status :
+        <%= getStatusName(model.status) %>
+    </p>
+    <p>Downloading a large image and using scaling it down to render as a small image is a bad practice.</p>
+    <h4>What this rule checks</h4>
+    <p>If the  the natural dimension of the image > rendered width, Failed </p>
+    <p>If the  the natural dimension of the image == rendered width, Passed </p>
+
+   
+    <h4>Images</h4>
+<% if(meta!=null && meta>0) { %>
+    <div class="alert alert-danger small">
+        <%=  model.meta.length %> Issues.</div>
+    <% } else { %>
+        <div class="alert alert-success small"> No issues found :)</div>
+        <% } %>
+
+
+            <% meta.forEach(function(item) { %>
+                <div class="validation-item">
+                    <div class="res-img">
+                        <img src='<%= item.url %>'>
+                    </div>
+                    <div class="res-msg">
+                        <%= item.naturalWidth %>*
+                            <%= item.naturalWidth %> has been scaled down to
+                                <%= item.computedWidth %>*
+                                    <%= item.computedWidth %>
+                    </div>
+                </div>
+                <% }); %>
+
+
+</div>

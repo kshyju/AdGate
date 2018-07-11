@@ -1,5 +1,4 @@
 <h4>Rule Results</h4>
-<% include ../viewhelpers %>
 
 
 <div>
@@ -8,10 +7,20 @@
             <h3><%= ruleResult.name %></h3>
             <div>
                 <% ruleResult.recommendations.forEach(function(recommendation) { %>
+                    <div class="recommendation-container">
                     <div class="alert <%= getStatusClass(recommendation.status) %>">
 
-                        <%= recommendation.name %> :  <%= recommendation.status %>
+                        <i class='material-icons'><%= getStatus(recommendation.status) %></i>  <%= getDisplayName(recommendation.name) %>  
+
+                        <span class='details'>
+                            <a href='../recommendation/<%= model.id %>/<%= ruleResult.name %>/<%= recommendation.name %>' class='show_details' ><i class='material-icons'>arrow_forward</i></a>
+                        </span>
+                        
                     </div>
+                    <div class="details-meta">
+
+                    </div>
+                </div>
                 <% }); %>
             </div>
         </div>

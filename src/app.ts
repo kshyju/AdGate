@@ -1,7 +1,7 @@
 let express = require("express");
 import path from "path";
 import { Runner } from "./runner";
-
+var url = require('url');
 let bodyParser = require("body-parser");
 
 // Controllers (route handlers)
@@ -21,13 +21,15 @@ app.use(bodyParser.json());
  */
 app.get("/", homeController.index);
 app.get("/details/:id", homeController.details);
+app.get("/recommendation/:id/:ruleName/:recName", homeController.recommendationdetails);
+
 
 /**
- * Primary app routes POST.
+ * Primary app routes POST. :ruleName/:recName
  */
 app.post("/analyse", homeController.analyse);
 
-app.locals.getStatusClass = function(status: number) {
+app.locals.getStatusClass = function (status: number) {
   if (status == 1) {
     return "alert-success";
   } else if (status == 2) {
@@ -35,6 +37,50 @@ app.locals.getStatusClass = function(status: number) {
   } else {
     return "alert-danger";
   }
+};
+
+app.locals.getStatus = function (status: number) {
+  if (status == 1) {
+    return "done";
+  } else if (status == 2) {
+    return "warning";
+  } else {
+    return "error";
+  }
+};
+
+app.locals.getStatusName = function (status: number) {
+  if (status == 1) {
+    return "Passed :)";
+  } else if (status == 2) {
+    return "Partially failed!";
+  } else {
+    return "Failed!";
+  }
+};
+
+app.locals.getDisplayName = function (ruleName: string) {
+  if (ruleName == "console-logs") {
+    return "Console logs";
+  } else if (ruleName == "console-errors") {
+    return "Console Errors";
+  } else if (ruleName == "scaled-images") {
+    return "Scaled Images";
+  } else if (ruleName == "dns") {
+    return "DNS Lookup";
+  } else if (ruleName == "too-many-network-calls") {
+    return "Too many network calls";
+  } else if (ruleName == "redirects") {
+    return "Redirect responses";
+  }
+  else {
+    return ruleName;
+  }
+};
+
+
+app.locals.getUrlHostName = function (fullUrl: string) {
+  return url.parse(fullUrl).hostname;
 };
 
 export default app;

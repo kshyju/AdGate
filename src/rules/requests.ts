@@ -100,7 +100,7 @@ export class Requests {
       );
       t.ruleResult.recommendations.push(tooManyNetworkCalls);
       if (includeMeta) {
-        t.ruleResult.meta = this.requests;
+        t.ruleResult.meta = requests;
       }
       return resolve(t.ruleResult);
 

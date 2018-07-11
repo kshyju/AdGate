@@ -1,0 +1,40 @@
+<div>
+    <h3>Too many DNS lookup</h4>
+    <p>Status :
+        <%= getStatusName(model.status) %>
+    </p>
+    <p>Making calls to different domains requires multiple DNS lookup, which might affect page performance.</p>
+    <h4>What this rule checks</h4>
+    <p>If unique hostNames are  <5 : Passed </p>
+    <p>If unique hostNames are >5 and <8 : Warning </p>
+    <p>If unique hostNames are >5 : Failed </p>
+</div>
+
+<%
+   
+    var allRequests = meta;
+    if(allRequests)
+    {
+        var hostNames = allRequests.map(function(item) {
+            return getUrlHostName(item.url);
+        });
+        var uniqueHostNames = hostNames.filter((v, i, a) => a.indexOf(v) === i);
+       
+        %>
+        <table class="table table-striped small">
+            <thead class="thead">
+                <tr>
+                    <th>Host name</th>
+                </tr>
+            </thead>
+            <% uniqueHostNames.forEach(function(item) { %>
+                <tr>
+                    <td>
+                        <%= item %>
+                    </td>
+                </tr>
+                <% }); %>
+        </table>
+        <%
+    }
+%>

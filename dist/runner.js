@@ -70,7 +70,8 @@ class Runner {
                     return new Result_1.Result(document.id, 0);
                 });
             }))
-                .catch(() => {
+                .catch((err) => {
+                console.log(err);
                 return new Result_1.Result("", 0);
             });
             return result;

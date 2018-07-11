@@ -84,7 +84,8 @@ export class Runner {
           return new Result(document.id, 0);
         });
       })
-      .catch(() => {
+      .catch((err:any) => {
+        console.log(err);
         return new Result("", 0);
       });
 
