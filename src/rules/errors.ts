@@ -5,11 +5,12 @@ import { Recommendation } from "../types/Recommendation";
 import { resolve } from "url";
 
 export class Errors {
-  ruleResult = new RuleResult("errors");
+  
 
   errorEntries: string[] = [];
   listen(page: any) {
     let t = this;
+    t.errorEntries = [];
     page.on("error", function(msg: any) {
       t.errorEntries.push(msg.text());
     });
@@ -17,14 +18,15 @@ export class Errors {
 
   results(includeMeta: boolean): Promise<RuleResult> {
     let t = this;
+    let ruleResult = new RuleResult("errors");
     return new Promise(function(resolve: any, reject: any) {
       let status = t.errorEntries.length == 0 ? 1 : 2;
       var errorRecommendation = new Recommendation("console-errors", status);
       if (includeMeta) {
-        t.ruleResult.meta = t.errorEntries;
+        ruleResult.meta = t.errorEntries;
       }
-      t.ruleResult.recommendations.push(errorRecommendation);
-      return resolve(t.ruleResult);
+      ruleResult.recommendations.push(errorRecommendation);
+      return resolve(ruleResult);
     });
   }
 }

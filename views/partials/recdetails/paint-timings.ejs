@@ -1,0 +1,22 @@
+<div>
+    <h3>First Meaningful Paint</h4>
+    <p>Status :
+        <%= getStatusName(model.status) %>
+    </p>
+    <p>Page load is a key aspect of how a user perceives the performance of your page.</p>
+    <h4>What this rule checks</h4>
+    <p>If first content-ful paint  <1 second : Passed </p>
+    <p>If unique hostNames are >1 second and <2 second : Warning </p>
+    <p>If unique hostNames are >2 : Failed </p>
+
+    <% if(meta)
+    {
+    %>
+    <div>
+       <p>  First Paint : <%= meta["first-paint"]/1000 %>  seconds</p>
+       <p>  First Contentful Paint : <%= meta["first-contentful-paint"]/1000 %> seconds</p>
+    </div>
+    <% } %>
+
+</div>
+

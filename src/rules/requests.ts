@@ -6,15 +6,14 @@ import { Recommendation } from "../types/Recommendation";
 const url = require("url");
 
 export class Requests {
-  ruleResult = new RuleResult("requests");
+  
   reqData: any = {};
 
-  constructor() {
-    this.ruleResult.recommendations = [];
-  }
+  
 
   listen(page: any) {
     let t = this;
+    t.reqData = {};
     page.on("request", function (request: any) {
       t.reqData[request._requestId] = {
         url: request._url,
@@ -40,6 +39,7 @@ export class Requests {
 
   results(includeMeta: boolean): Promise<RuleResult> {
 
+    let ruleResult = new RuleResult("requests");
     let requests: any[] = [];
     let t = this;
 
@@ -65,7 +65,7 @@ export class Requests {
         dnsLookupRuleStatus = 3;
       }
       var dnsLookupCountResult = new Recommendation("dns", dnsLookupRuleStatus);
-      t.ruleResult.recommendations.push(dnsLookupCountResult);
+      ruleResult.recommendations.push(dnsLookupCountResult);
 
       // Recommendation for too many external calls
       var tooManyNetworkCallsStatus = 1;
@@ -80,7 +80,7 @@ export class Requests {
         "too-many-network-calls",
         tooManyNetworkCallsStatus
       );
-      t.ruleResult.recommendations.push(tooManyNetworkCalls);
+      ruleResult.recommendations.push(tooManyNetworkCalls);
 
       // Recommendation for redirect response ?
 
@@ -98,11 +98,11 @@ export class Requests {
         "redirects",
         redirectResponseStatus
       );
-      t.ruleResult.recommendations.push(tooManyNetworkCalls);
+      ruleResult.recommendations.push(tooManyNetworkCalls);
       if (includeMeta) {
-        t.ruleResult.meta = requests;
+        ruleResult.meta = requests;
       }
-      return resolve(t.ruleResult);
+      return resolve(ruleResult);
 
 
     });

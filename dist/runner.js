@@ -15,11 +15,13 @@ const Cosmos_1 = require("./resultformatter/Cosmos");
 const requests_1 = require("./rules/requests");
 const Console_1 = require("./rules/Console");
 const errors_1 = require("./rules/errors");
+const perftiming_1 = require("./rules/perftiming");
 const debug = new debug_1.Debug();
 const imageRule = new image_1.ImageRule();
 const requestRule = new requests_1.Requests();
 const consoleRule = new Console_1.Console();
 const errorRule = new errors_1.Errors();
+const perfTiming = new perftiming_1.PerfTiming();
 var cosmos = new Cosmos_1.Cosmos();
 class Runner {
     runRules(url, delay, includeMeta) {
@@ -57,9 +59,12 @@ class Runner {
             promiseArray.push(errorRule.results(includeMeta));
             promiseArray.push(imageRule.validate(page, includeMeta));
             promiseArray.push(requestRule.results(includeMeta));
+            promiseArray.push(perfTiming.results(page, includeMeta));
+            console.log('promiseArray', promiseArray.length);
             var result = Promise.all(promiseArray)
                 .then((result) => __awaiter(this, void 0, void 0, function* () {
                 yield browser.close();
+                //console.log('80',result);
                 const d = {
                     id: "",
                     url: url,
