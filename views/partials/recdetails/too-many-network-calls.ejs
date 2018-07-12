@@ -10,13 +10,14 @@
     <p>If number of requests made >5 : Failed </p>
 
     <%
-   
+
     var allRequests = meta;
     if(allRequests)
     {
-      
-       
+
+
         %>
+        <p>This page made <strong> <mark><%= allRequests.length %></mark></strong> network calls</p>
         <table class="table table-striped small">
             <thead class="thead">
                 <tr>

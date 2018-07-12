@@ -26,8 +26,7 @@ export let details = async (req: any, res: any) => {
     const mssql = new Cosmos();
     var resultItems = await mssql.getDocument(req.params.id).then(function(document:any){
 
-        //console.log(29);
-        //console.log(document);
+
         let recommendations:any[] = [];
 
 
@@ -36,7 +35,6 @@ export let details = async (req: any, res: any) => {
             recommendations.push(...ruleResult.recommendations);
 
         });
-        console.log(recommendations);
 
 
 
@@ -50,16 +48,14 @@ export let details = async (req: any, res: any) => {
 
 /**
  * GET /
- * Details for a specific recommendation * 
+ * Details for a specific recommendation *
  * Ex: /recommendation/005df20b-0a30-673f-9ea7-061ca440ab56/console/rec=console-logs
  * console is the rule name & console-logs is the recommendation name
  */
 export let recommendationdetails = async (req: any, res: any) => {
     const mssql = new Cosmos();
     var ruleName = req.params.ruleName;
-    console.log(ruleName);
     var recommendationName = req.params.recName;
-    console.log(recommendationName);
 
     var resultItems = await mssql.getDocument(req.params.id).then(function(doc:any){
 
@@ -67,14 +63,13 @@ export let recommendationdetails = async (req: any, res: any) => {
             return item.name==ruleName;
         });
         var rule = rules[0];
-        console.log('rule',rule.recommendations);
-        
+
         var recommendations = rule.recommendations.filter((r:any)=>{
             return r.name==recommendationName;
         });
 
         var recommendation = recommendations[0];
-        
+
         var viewName = `partials/recdetails/${recommendationName}`;// recommendationName;
 
         res.render(viewName, { model: recommendation, meta : rule.meta});

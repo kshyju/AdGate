@@ -26,7 +26,7 @@ export class Console {
       }
       ruleResult.recommendations.push(consoleRecommendation);
 
-    
+
 
       return resolve(ruleResult);
     });

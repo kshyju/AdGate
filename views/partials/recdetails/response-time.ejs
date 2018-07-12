@@ -1,0 +1,21 @@
+<div>
+    <h3>Response time</h4>
+    <p>Status :
+        <%= getStatusName(model.status) %>
+    </p>
+    <p>Slow response time is bad!</p>
+    <h4>What this rule checks</h4>
+    <p>If TTFB  <200 mil second : Passed </p>
+    <p>If TTFB  >200 mil second and <=600 mil second : Warning </p>
+    <p>If TTFB  > 600 mil second : Failed </p>
+
+    <% if(meta)
+    {
+    %>
+    <div>
+       <p>  responseStart : <%= meta.navTimings.responseStart %>  seconds</p>
+    </div>
+    <% } %>
+
+</div>
+

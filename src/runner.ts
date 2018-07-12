@@ -8,6 +8,8 @@ import { Console } from "./rules/Console";
 import { Errors } from "./rules/errors";
 import { RuleResult } from "./types/RuleResult";
 import { PerfTiming } from "./rules/perftiming";
+import { Dialog } from "./rules/Dialog";
+
 const debug = new Debug();
 
 const imageRule = new ImageRule();
@@ -15,6 +17,7 @@ const requestRule = new Requests();
 const consoleRule = new Console();
 const errorRule = new Errors();
 const perfTiming = new PerfTiming();
+const dialog = new Dialog();
 
 var cosmos = new Cosmos();
 
@@ -31,13 +34,14 @@ export class Runner {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
-    /*     page.on("console", function(msg: any) {
+        page.on("console", function(msg: any) {
       console.log(msg.text());
-    }); */
+    });
 
     //await page.setRequestInterception(true);
 
     //Register the rules
+    dialog.listen(page);
     consoleRule.listen(page);
     requestRule.listen(page);
     errorRule.listen(page);
@@ -65,16 +69,15 @@ export class Runner {
 
     var promiseArray = new Array<Promise<any>>();
 
-  
-    promiseArray.push(consoleRule.results(includeMeta));
 
+    //promiseArray.push(consoleRule.results(includeMeta));
+    promiseArray.push(dialog.results());
     promiseArray.push(errorRule.results(includeMeta));
     promiseArray.push(imageRule.validate(page, includeMeta));
     promiseArray.push(requestRule.results(includeMeta));
     promiseArray.push(perfTiming.results(page,includeMeta));
 
-  
-    console.log('promiseArray',promiseArray.length);
+
 
     var result = Promise.all(promiseArray)
       .then(async (result: any) => {

@@ -73,6 +73,9 @@ app.locals.getDisplayName = function (ruleName: string) {
   } else if (ruleName == "redirects") {
     return "Redirect responses";
   }
+  else if (ruleName == "paint-timings") {
+    return "Paint time";
+  }
   else {
     return ruleName;
   }
