@@ -60,7 +60,7 @@ export class Runner {
       await page.waitFor(delay * 1000);
     }
 
-    
+
     let allRulesResults: RuleResult[] = [];
 
     // to do
@@ -77,8 +77,8 @@ export class Runner {
     //promiseArray.push(errorRule.results(includeMeta));
     //promiseArray.push(imageRule.validate(page, includeMeta));
     //promiseArray.push(requestRule.results(includeMeta));
-    promiseArray.push(perfTiming.results(page,includeMeta));
-    promiseArray.push(pageMetrics.results(page,includeMeta));
+    //promiseArray.push(perfTiming.results(page,includeMeta));
+   // promiseArray.push(pageMetrics.results(page,includeMeta));
     promiseArray.push(frame.results(page,includeMeta));
 
 
@@ -87,10 +87,9 @@ export class Runner {
       .then(async (result: any) => {
        // await page.tracing.stop();
        await browser.close();
-      
+
 
         console.log('done');
-        //console.log('80',result);
         const d = {
           id: "",
           url: url,

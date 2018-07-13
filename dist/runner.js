@@ -64,15 +64,14 @@ class Runner {
             //promiseArray.push(errorRule.results(includeMeta));
             //promiseArray.push(imageRule.validate(page, includeMeta));
             //promiseArray.push(requestRule.results(includeMeta));
-            promiseArray.push(perfTiming.results(page, includeMeta));
-            promiseArray.push(pageMetrics.results(page, includeMeta));
+            //promiseArray.push(perfTiming.results(page,includeMeta));
+            // promiseArray.push(pageMetrics.results(page,includeMeta));
             promiseArray.push(frame.results(page, includeMeta));
             var result = Promise.all(promiseArray)
                 .then((result) => __awaiter(this, void 0, void 0, function* () {
                 // await page.tracing.stop();
                 yield browser.close();
                 console.log('done');
-                //console.log('80',result);
                 const d = {
                     id: "",
                     url: url,
