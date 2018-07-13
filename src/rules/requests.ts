@@ -14,6 +14,7 @@ export class Requests {
   listen(page: any) {
     let t = this;
     t.reqData = {};
+    
     page.on("request", function (request: any) {
       t.reqData[request._requestId] = {
         url: request._url,

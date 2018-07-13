@@ -17,6 +17,8 @@ const Console_1 = require("./rules/Console");
 const errors_1 = require("./rules/errors");
 const perftiming_1 = require("./rules/perftiming");
 const Dialog_1 = require("./rules/Dialog");
+const pagemetrics_1 = require("./rules/pagemetrics");
+const frames_1 = require("./rules/frames");
 const debug = new debug_1.Debug();
 const imageRule = new image_1.ImageRule();
 const requestRule = new requests_1.Requests();
@@ -24,6 +26,8 @@ const consoleRule = new Console_1.Console();
 const errorRule = new errors_1.Errors();
 const perfTiming = new perftiming_1.PerfTiming();
 const dialog = new Dialog_1.Dialog();
+const pageMetrics = new pagemetrics_1.PageMetrics();
+const frame = new frames_1.Frames();
 var cosmos = new Cosmos_1.Cosmos();
 class Runner {
     runRules(url, delay, includeMeta) {
@@ -32,41 +36,42 @@ class Runner {
             const puppeteer = require("puppeteer");
             const browser = yield puppeteer.launch({ headless: false });
             const page = yield browser.newPage();
-            page.on("console", function (msg) {
-                console.log(msg.text());
-            });
+            /*    page.on("console", function(msg: any) {
+              console.log(msg.text());
+            }); */
             //await page.setRequestInterception(true);
             //Register the rules
             dialog.listen(page);
             consoleRule.listen(page);
             requestRule.listen(page);
             errorRule.listen(page);
+            frame.listen(page);
+            //await page.tracing.start({path: 'trace.json'});
+            delay = 2;
             yield page.goto(url);
             if (delay > 0) {
                 yield page.waitFor(delay * 1000);
             }
             let allRulesResults = [];
-            //const errorEntries: RuleResult = await errorRule.results();
-            //const consoleEntries: RuleResult = consoleRule.results();
-            //const requestEntries: RuleResult = requestRule.results();
-            //allRulesResults.push(requestEntries);
-            // allRulesResults.push(consoleEntries);
-            //allRulesResults.push(errorEntries);
             // to do
             // 1. Get DOMContentLoaded time
             // 2. MB transferred
             // 3. Load time ?
             // 4. Extra images being downloaded, but not being used(visible ?)
             var promiseArray = new Array();
-            //promiseArray.push(consoleRule.results(includeMeta));
-            promiseArray.push(dialog.results());
-            promiseArray.push(errorRule.results(includeMeta));
-            promiseArray.push(imageRule.validate(page, includeMeta));
-            promiseArray.push(requestRule.results(includeMeta));
+            // promiseArray.push(consoleRule.results(includeMeta));
+            //promiseArray.push(dialog.results());
+            //promiseArray.push(errorRule.results(includeMeta));
+            //promiseArray.push(imageRule.validate(page, includeMeta));
+            //promiseArray.push(requestRule.results(includeMeta));
             promiseArray.push(perfTiming.results(page, includeMeta));
+            promiseArray.push(pageMetrics.results(page, includeMeta));
+            promiseArray.push(frame.results(page, includeMeta));
             var result = Promise.all(promiseArray)
                 .then((result) => __awaiter(this, void 0, void 0, function* () {
+                // await page.tracing.stop();
                 yield browser.close();
+                console.log('done');
                 //console.log('80',result);
                 const d = {
                     id: "",
