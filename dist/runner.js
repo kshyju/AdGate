@@ -47,6 +47,7 @@ class Runner {
             errorRule.listen(page);
             frame.listen(page);
             //await page.tracing.start({path: 'trace.json'});
+            delay = 2;
             yield page.goto(url);
             if (delay > 0) {
                 yield page.waitFor(delay * 1000);
@@ -58,14 +59,14 @@ class Runner {
             // 3. Load time ?
             // 4. Extra images being downloaded, but not being used(visible ?)
             var promiseArray = new Array();
-            //promiseArray.push(consoleRule.results(includeMeta));
+            // promiseArray.push(consoleRule.results(includeMeta));
             //promiseArray.push(dialog.results());
             //promiseArray.push(errorRule.results(includeMeta));
             //promiseArray.push(imageRule.validate(page, includeMeta));
-            promiseArray.push(requestRule.results(includeMeta));
-            //promiseArray.push(perfTiming.results(page,includeMeta));
-            //promiseArray.push(pageMetrics.results(page,includeMeta));
-            //promiseArray.push(frame.results(page,includeMeta));
+            //promiseArray.push(requestRule.results(includeMeta));
+            promiseArray.push(perfTiming.results(page, includeMeta));
+            promiseArray.push(pageMetrics.results(page, includeMeta));
+            promiseArray.push(frame.results(page, includeMeta));
             var result = Promise.all(promiseArray)
                 .then((result) => __awaiter(this, void 0, void 0, function* () {
                 // await page.tracing.stop();

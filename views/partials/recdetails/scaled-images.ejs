@@ -3,12 +3,12 @@
     <p>Status :
         <%= getStatusName(model.status) %>
     </p>
-    <p>Downloading a large image and scaling it down to render as a small image is a bad practice. Downloading a large image will cost bandwidth</p>
-    <p>Consider using an image with the same size as how you render it.</p>
+    <p>Downloading a large image and using scaling it down to render as a small image is a bad practice.</p>
     <h4>What this rule checks</h4>
     <p>If the  the natural dimension of the image > rendered width, Failed </p>
     <p>If the  the natural dimension of the image == rendered width, Passed </p>
-  
+
+   
     <h4>Images</h4>
 <% if(meta!=null && meta>0) { %>
     <div class="alert alert-danger small">
@@ -24,12 +24,10 @@
                         <img src='<%= item.url %>'>
                     </div>
                     <div class="res-msg">
-                        <p>
                         <%= item.naturalWidth %>*
-                        <%= item.naturalWidth %> has been scaled down to
-                        <%= item.computedWidth %>*
-                        <%= item.computedWidth %>
-                    </p>
+                            <%= item.naturalWidth %> has been scaled down to
+                                <%= item.computedWidth %>*
+                                    <%= item.computedWidth %>
                     </div>
                 </div>
                 <% }); %>

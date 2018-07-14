@@ -13,9 +13,8 @@
     {
     %>
     <div>
-        <%= JSON.stringify(meta) %>
-       <p>  First Paint : <%= meta.paintTimings["first-paint"]/1000 %>  seconds</p>
-       <p>  First Contentful Paint : <%= meta.paintTimings["first-contentful-paint"]/1000 %> seconds</p>
+       <p>  First Paint : <%= meta["first-paint"]/1000 %>  seconds</p>
+       <p>  First Contentful Paint : <%= meta["first-contentful-paint"]/1000 %> seconds</p>
     </div>
     <% } %>
 

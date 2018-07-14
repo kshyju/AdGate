@@ -21,26 +21,22 @@
         <table class="table table-striped small">
             <thead class="thead">
                 <tr>
-                  
-                    <th>Type</th>
-                   
-                    <th>Method</th>
                     <th>URL</th>
+                    <th>Type</th>
+                    <th>Method</th>
                 </tr>
             </thead>
             <% allRequests.forEach(function(item) { %>
                 <tr>
-                        <td>
-                                <%= item.type %>
-                        </td>
-                        <td>
-                                <%= item.method %>
-                        </td>
                     <td>
                         <%= item.url %>
                     </td>
-                   
-                   
+                    <td>
+                            <%= item.type %>
+                    </td>
+                    <td>
+                            <%= item.method %>
+                    </td>
                 </tr>
                 <% }); %>
         </table>
