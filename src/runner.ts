@@ -54,7 +54,7 @@ export class Runner {
 //await page.tracing.start({path: 'trace.json'});
 
 
-    delay=2;
+    
     await page.goto(url);
     if (delay > 0) {
       await page.waitFor(delay * 1000);
@@ -72,14 +72,14 @@ export class Runner {
     var promiseArray = new Array<Promise<any>>();
 
 
-   // promiseArray.push(consoleRule.results(includeMeta));
+    //promiseArray.push(consoleRule.results(includeMeta));
     //promiseArray.push(dialog.results());
     //promiseArray.push(errorRule.results(includeMeta));
     //promiseArray.push(imageRule.validate(page, includeMeta));
-    //promiseArray.push(requestRule.results(includeMeta));
-    promiseArray.push(perfTiming.results(page,includeMeta));
-    promiseArray.push(pageMetrics.results(page,includeMeta));
-    promiseArray.push(frame.results(page,includeMeta));
+    promiseArray.push(requestRule.results(includeMeta));
+    //promiseArray.push(perfTiming.results(page,includeMeta));
+    //promiseArray.push(pageMetrics.results(page,includeMeta));
+    //promiseArray.push(frame.results(page,includeMeta));
 
 
 
