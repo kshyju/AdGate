@@ -1,10 +1,10 @@
-<h4>Rule Results</h4>
+<h3>Results</h3>
 
 
 <div>
     <% model.ruleResults.forEach(function(ruleResult) { %>
         <div>
-            <h3><%= ruleResult.name %></h3>
+            <h3><%= getRuleDisplayName(ruleResult.name) %></h3>
             <div>
                 <% ruleResult.recommendations.forEach(function(recommendation) { %>
                     <div class="recommendation-container">

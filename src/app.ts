@@ -76,6 +76,32 @@ app.locals.getDisplayName = function (ruleName: string) {
   else if (ruleName == "paint-timings") {
     return "Paint time";
   }
+  else if (ruleName == "node-count") {
+    return "Node count in page";
+  }
+  else if (ruleName == "node-count") {
+    return "Node count in page";
+  }
+  else if (ruleName == "response-time") {
+    return "Time to first byte";
+  }
+  else {
+    return ruleName;
+  }
+};
+
+app.locals.getRuleDisplayName = function (ruleName: string) {
+  if (ruleName == "pageMetrics") {
+    return "Page Metrics";
+  } else if (ruleName == "perf-timings") {
+    return "Perf Timings";
+  } 
+  else if (ruleName == "requests") {
+    return "Requests";
+  } 
+  else if (ruleName == "image") {
+    return "Images";
+  } 
   else {
     return ruleName;
   }
