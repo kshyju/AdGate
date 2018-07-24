@@ -1,0 +1,21 @@
+<div>
+    <h3>Too many iframes</h4>
+    <p>Status :
+        <%= getStatusName(model.status) %>
+    </p>
+    <p>Having too many iframes would affect the user perceived performance</p>
+    <h4>What this rule checks</h4>
+    <p>If number of frames in the document == 0 : Passed </p>
+    <p>If number of frames in the document > 1  : Failed </p>
+  
+    <% if(meta)
+    {
+    %>
+    <div>
+       <p>  Frames count : <%= meta.Frames %></p>
+    </div>
+    <% } %>
+    <hr >
+    
+</div>
+
