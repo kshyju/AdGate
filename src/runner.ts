@@ -5,7 +5,7 @@ import { Cosmos } from "./resultformatter/Cosmos";
 import { NewDocument } from "documentdb";
 import { Requests } from "./rules/requests";
 import { Console } from "./rules/Console";
-import { Errors } from "./rules/errors";
+//import { Errors } from "./rules/errors";
 import { RuleResult } from "./types/RuleResult";
 import { PerfTiming } from "./rules/perftiming";
 import { Dialog } from "./rules/Dialog";
@@ -17,7 +17,7 @@ const debug = new Debug();
 const imageRule = new ImageRule();
 const requestRule = new Requests();
 const consoleRule = new Console();
-const errorRule = new Errors();
+//const errorRule = new Errors();
 const perfTiming = new PerfTiming();
 const dialog = new Dialog();
 const pageMetrics = new PageMetrics();
@@ -48,7 +48,6 @@ export class Runner {
     dialog.listen(page);
     consoleRule.listen(page);
     requestRule.listen(page);
-    errorRule.listen(page);
     frame.listen(page);
 
 
@@ -71,7 +70,7 @@ export class Runner {
 
     promiseArray.push(consoleRule.results(includeMeta));
     promiseArray.push(dialog.results());
-    promiseArray.push(errorRule.results(includeMeta));
+   // promiseArray.push(errorRule.results(includeMeta));
     promiseArray.push(imageRule.validate(page, includeMeta));
     promiseArray.push(requestRule.results(includeMeta));
     promiseArray.push(perfTiming.results(page,includeMeta));

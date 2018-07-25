@@ -53,7 +53,7 @@ app.locals.getStatusName = function (status: number) {
   if (status == 1) {
     return "Passed :)";
   } else if (status == 2) {
-    return "Partially failed!";
+    return "Warning!";
   } else {
     return "Failed!";
   }
@@ -79,11 +79,14 @@ app.locals.getDisplayName = function (ruleName: string) {
   else if (ruleName == "node-count") {
     return "Node count in page";
   }
-  else if (ruleName == "node-count") {
-    return "Node count in page";
+  else if (ruleName == "frames-in-page") {
+    return "Frames in page";
   }
   else if (ruleName == "response-time") {
     return "Time to first byte";
+  }
+  else if (ruleName == "js-listener-count") {
+    return "Too many event listeners in the page";
   }
   else {
     return ruleName;
@@ -95,13 +98,22 @@ app.locals.getRuleDisplayName = function (ruleName: string) {
     return "Page Metrics";
   } else if (ruleName == "perf-timings") {
     return "Perf Timings";
-  } 
+  }
   else if (ruleName == "requests") {
     return "Requests";
-  } 
+  }
   else if (ruleName == "image") {
     return "Images";
-  } 
+  }
+  else if (ruleName == "frames") {
+    return "Frames";
+  }
+  else if (ruleName == "console") {
+    return "Console logging";
+  }
+  else if (ruleName == "dialog") {
+    return "User Experience";
+  }
   else {
     return ruleName;
   }

@@ -1,4 +1,4 @@
-<h3>Results</h3>
+<h3>AdGate analysis results</h3>
 
 
 <div>
@@ -10,12 +10,12 @@
                     <div class="recommendation-container">
                     <div class="alert <%= getStatusClass(recommendation.status) %>">
 
-                        <i class='material-icons'><%= getStatus(recommendation.status) %></i>  <%= getDisplayName(recommendation.name) %>  
+                        <i class='material-icons'><%= getStatus(recommendation.status) %></i>  <%= getDisplayName(recommendation.name) %>
 
                         <span class='details'>
                             <a href='../recommendation/<%= model.id %>/<%= ruleResult.name %>/<%= recommendation.name %>' class='show_details' ><i class='material-icons'>arrow_forward</i></a>
                         </span>
-                        
+
                     </div>
                     <div class="details-meta">
 

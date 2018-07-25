@@ -1,0 +1,20 @@
+<div>
+    <h4>Rule: Too many event listeners</h4>
+    <p><strong>Status: <%= getStatusName(model.status) %></strong> </p>
+    <p>Having too many javascript event listeners in the page will hurt performance.</p>
+    <h4>What this rule checks</h4>
+    <ul>
+        <li>If number of event listeners in the page <= 10: Passed </li>
+        <li>If number of event listerners in the document > 10 and <=100: Warning</li>
+        <li>If number of event listerners in the document > 100: Failed</li>
+    </ul>
+
+    <% if(meta)
+    {
+    %>
+    <div>
+       <p>  Event listener count : <%= meta.JSEventListeners %></p>
+    </div>
+    <% } %>
+    <hr >
+</div>

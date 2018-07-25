@@ -13,8 +13,11 @@
                     <img src='<%= item.url %>'>
                 </div>
                 <div class="res-msg">
-                    <strong><%= item.naturalWidth %>* <%= item.naturalWidth %></strong> has been scaled down to
-                    <strong><%= item.computedWidth %>*<%= item.computedWidth %></strong>
+                    <strong><%= item.naturalWidth %>* <%= item.naturalHeight %></strong> has been scaled down to
+                    <strong><%= item.computedWidth %>*<%= item.computedHeight %></strong>
+                    <span class="text-right text-primary">
+                         - Potential savings <strong><%= Math.round(((item.naturalWidth*item.naturalHeight)- (item.computedHeight*item.computedWidth) * 4)/1024) %> KB </strong>
+                    </span>
                 </div>
             </div>
         <% });%>
