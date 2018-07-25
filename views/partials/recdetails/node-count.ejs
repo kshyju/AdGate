@@ -1,14 +1,13 @@
 <div>
-    <h3>Too many DOM nodes!</h4>
-    <p>Status :
-        <%= getStatusName(model.status) %>
-    </p>
-    <p>Rendering a lot of DOM nodes would hurt performance. Render only the needed nodes.</p>
+    <h4>Rule: Too many DOM nodes!</h4>
+    <p><strong>Status: <%= getStatusName(model.status) %></strong></p>
+    <p>Rendering a lot of DOM nodes will hurt performance. Render only the needed nodes. Consider a lazy loading approach as appropriate.</p>
     <h4>What this rule checks</h4>
-    <p>If number of nodes in the document <1500 : Passed </p>
-    <p>If number of nodes in the document >1500 and <2000 : Warning </p>
-    <p>If number of nodes in the document >2000 : Failed </p>
-  
+    <ul>
+        <li>If number of nodes in the document <1500: Passed</li>
+        <li>If number of nodes in the document >1500 and <2000: Warning</li>
+        <li>If number of nodes in the document >2000: Failed </li>
+    </ul>
     <% if(meta)
     {
     %>

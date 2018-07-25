@@ -1,13 +1,12 @@
 <div>
-    <h3>Dialog in page</h4>
-    <p>Status :
-        <%= getStatusName(model.status) %>
+    <h4>Rule: Dialogs in page</h4>
+    <p><strong>Status: <%= getStatusName(model.status) %></strong>
     </p>
-    <p>Dialogs like alert/prompt are not a good user experience.</p>
+    <p>Dialogs like alert or prompt on the page are not a good user experience.</p>
     <h4>What this rule checks</h4>
-    <p>If number of dialogs  ==0  : Passed </p>
-    <p>If number of dialogs >0 : Failed </p>
-
-
+    <ul>
+        <li>If number of dialogs = 0  : Passed</li>
+        <li>If number of dialogs >0 : Failed</li>
+    </ul>
 </div>
 

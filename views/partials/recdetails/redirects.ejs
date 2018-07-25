@@ -1,24 +1,23 @@
 <div>
-    <h3>Redirect responses</h4>
-    <p>Status :
-        <%= getStatusName(model.status) %>
+    <h4>Rule: Redirect responses</h4>
+    <p><strong>Status: <%= getStatusName(model.status) %></strong>
     </p>
-    <p>A Redirect response instructs a browser to make a new request to the location header value given by server for the current request's response. An additional call will affect the performance.</p>
+    <p>A redirect response(302) instructs a browser to make a new request to the location header value given by server for the current request's response and browser will issue a new GET request to that url. The delay caused by this additional call will degrade the end user experience.</p>
     <h4>What this rule checks</h4>
-    <p>If number of redirect responses==0  : Passed </p>
-    <p>If number of requests made >0 and <=2 : Warning </p>
-    <p>If number of requests made >2: Failed </p>
-
-
+    <ul>
+        <li>If number of redirect responses = 0 : Passed </li>
+        <li>If number of requests made >0 and <=2 : Warning </li>
+        <li>If number of requests made >2: Failed</li>
+    </ul>
     <%
-   
+
     var allRequests = meta;
     if(allRequests)
     {
         var redirectRequests = allRequests.filter(function (item) {
             return (item.status == 302 || item.status == 307);
           });
-       
+
         %>
         <table class="table table-striped small">
             <thead class="thead">

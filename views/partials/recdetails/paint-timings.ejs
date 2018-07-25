@@ -1,22 +1,22 @@
 <div>
-    <h3>First Meaningful Paint</h4>
-    <p>Status :
-        <%= getStatusName(model.status) %>
+    <h4>Rule: First Meaningful Paint</h4>
+    <p><strong>Status: <%= getStatusName(model.status) %></strong>
     </p>
-    <p>Page load is a key aspect of how a user perceives the performance of your page.</p>
-    <h4>What this rule checks</h4>
-    <p>If first content-ful paint  <1 second : Passed </p>
-    <p>If first content-ful paint >1 second and <=2 second : Warning </p>
-    <p>If first content-ful paint  >2 : Failed </p>
+    <p>The sooner the browser renders meaniful pixels to the page, the better the user experience is. If your page rendering is slow, it is likely that your users may abandon the page and thus conversions will be low.</p>
+    <h4>What this rule checks?</h4>
+    <ul>
+        <li>If first content-ful paint  < 1 second: Passed </li>
+        <li>If first content-ful paint > 1 second and <=2 second: Warning </li>
+        <li>If first content-ful paint  > 2 : Failed</li>
+    </ul>
 
     <% if(meta)
     {
     %>
     <div>
-       <p>  First Paint : <%= meta.paintTimings["first-paint"]/1000 %>  seconds</p>
-       <p>  First Contentful Paint : <%= meta.paintTimings["first-contentful-paint"]/1000 %> seconds</p>
+       <p>  First Paint: <%= (meta.paintTimings["first-paint"]/1000).toFixed(2) %>  seconds</p>
+       <p>  First Contentful Paint: <%= (meta.paintTimings["first-contentful-paint"]/1000).toFixed(2) %> seconds</p>
     </div>
     <% } %>
-
 </div>
 

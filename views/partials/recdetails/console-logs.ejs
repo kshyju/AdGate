@@ -1,30 +1,32 @@
 <div>
-    <h3>Console logging</h4>
-    <p>Status :
-        <%= getStatusName(model.status) %>
+    <h4>Rule: Console logging</h4>
+    <p><strong>Status:
+        <%= getStatusName(model.status) %></strong>
     </p>
-    <p>Production code should not write to console</p>
+    <p>Production code should not write to any messages to browser console.</p>
     <h4>What this rule checks</h4>
-    <p>If number of console log messages  <5 : Passed </p>
-    <p>If number of requests made >5 and <8 : Warning </p>
-    <p>If number of requests made >5 : Failed </p>
-    <p>Includes warning messages added by browser</p>
+    <ul>
+        <li>If number of console log messages = 0 : Passed </li>
+        <li>If number of requests made >0 and <5 : Warning </li>
+        <li>If number of requests made >=5 : Failed </li>
+    </ul>
+    <p><i>Includes warning messages emitted by browser</i></p>
     <%
-   
+
     var allRequests = meta;
     if(allRequests)
     {
-      
-       
+
+
         %>
         <table class="table table-striped small">
-           
+
             <% allRequests.forEach(function(item) { %>
                 <tr>
                     <td>
                         <%= item %>
                     </td>
-                    
+
                 </tr>
                 <% }); %>
         </table>

@@ -29,13 +29,13 @@
             <div class="col-12 bd-content" role="main">
                 <form action="/analyse" method="post" id="frm-analyse">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Email URL to validate</label>
+                        <label for="exampleInputEmail1">Enter URL to validate</label>
                         <input type="text" id="reqUrl" placeholder="Enter URL" class="form-control" required />
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Wait time(in seconds) before starting validation</label>
-                        <input type="number" class="form-control" id="delay" value="1" max="5">
-                        <small id="emailHelp" class="form-text text-muted">If your page is lazy loading images, it is better to wait a few seconds</small>
+                        <input type="number" class="form-control" id="delay" value="3" max="6">
+                        <small class="form-text text-muted">If your page is lazy loading images, it is better to wait a few seconds</small>
                     </div>
 
                     <button id="btn" type="submit" class="btn btn-primary">Submit</button>
@@ -75,8 +75,8 @@
                 }).done(function (result) {
                     $btn.prop("disabled",false);
                     var details =
-                        `<div class="alert alert-danger">${result.issueCount} issues found!</div><a target="_blank" href="/details/${result.id}">Click here to view details</a>`;
-                    $progress.html("Done!");
+                        `<div class="alert alert-success">Done!</div><a target="_blank" href="/details/${result.id}">Click here to view details</a>`;
+                    $progress.html("");
                     $("#details").html(details);
                 });
             });

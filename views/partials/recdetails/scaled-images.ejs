@@ -1,29 +1,21 @@
 <div>
-    <h3>Image Scaling</h4>
-    <p>Status :
-        <%= getStatusName(model.status) %>
-    </p>
-    <p>Downloading a large image and scaling it down to render as a small image is a bad practice.</p>
+    <h4>Rule: Image Scaling</h4>
+    <p><strong>Status: <%= getStatusName(model.status) %></strong></p>
+    <p>Downloading a large image and scaling it down to render as a small image is a bad practice. This unnecessary download wastes bandwidth.</p>
     <h4>What this rule checks</h4>
-    <p>If the  the natural dimension of the image > rendered width, Failed </p>
-    <p>If the  the natural dimension of the image == rendered width, Passed </p>
-
-
-
-
-            <% meta.forEach(function(item) { %>
-                <div class="validation-item">
-                    <div class="res-img">
-                        <img src='<%= item.url %>'>
-                    </div>
-                    <div class="res-msg">
-                        <strong><%= item.naturalWidth %>*
-                            <%= item.naturalWidth %></strong> has been scaled down to
-                            <strong><%= item.computedWidth %>*
-                                    <%= item.computedWidth %></strong>
-                    </div>
+    <ul>
+        <li>If the  the natural dimension of the image > rendered width, Failed </li>
+        <li>If the  the natural dimension of the image == rendered width, Passed </li>
+    </ul>
+        <% meta.forEach(function(item) { %>
+            <div class="validation-item">
+                <div class="res-img">
+                    <img src='<%= item.url %>'>
                 </div>
-                <% }); %>
-
-
+                <div class="res-msg">
+                    <strong><%= item.naturalWidth %>* <%= item.naturalWidth %></strong> has been scaled down to
+                    <strong><%= item.computedWidth %>*<%= item.computedWidth %></strong>
+                </div>
+            </div>
+        <% });%>
 </div>

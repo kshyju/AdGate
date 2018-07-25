@@ -65,12 +65,12 @@
     <div class="container">
 
         <div>
-            <h4>
+            <h5>
                 <a target="_blank" href='<%= model.url%>'>
                     <%= model.url%>
                 </a>
-            </h4>
- 
+            </h5>
+
 
                         <hr>
 
@@ -88,7 +88,7 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    
+
     <script>
         $(function () {
             $("a.show_details").click(function(e){
@@ -104,7 +104,7 @@
                 {
                     $.get(url).then(function(result){
                         _d.html(result);
-                       
+
                     });
                 }
                 else
