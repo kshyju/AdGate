@@ -67,10 +67,8 @@ class Runner {
             promiseArray.push(frame.results(page, includeMeta));
             var result = Promise.all(promiseArray)
                 .then((result) => __awaiter(this, void 0, void 0, function* () {
-                // await page.tracing.stop();
                 yield browser.close();
                 console.log('done');
-                //console.log('80',result);
                 const d = {
                     id: "",
                     url: url,

@@ -57,7 +57,7 @@ export class Runner {
       await page.waitFor(delay * 1000);
     }
 
-    
+
     let allRulesResults: RuleResult[] = [];
 
     // to do
@@ -82,12 +82,9 @@ export class Runner {
 
     var result = Promise.all(promiseArray)
       .then(async (result: any) => {
-       // await page.tracing.stop();
        await browser.close();
-      
 
         console.log('done');
-        //console.log('80',result);
         const d = {
           id: "",
           url: url,
