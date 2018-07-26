@@ -17,11 +17,10 @@ const debug = new Debug();
 const imageRule = new ImageRule();
 const requestRule = new Requests();
 const consoleRule = new Console();
-//const errorRule = new Errors();
 const perfTiming = new PerfTiming();
 const dialog = new Dialog();
 const pageMetrics = new PageMetrics();
-const frame= new Frames();
+const frame = new Frames();
 
 var cosmos = new Cosmos();
 
@@ -36,13 +35,7 @@ export class Runner {
     const puppeteer = require("puppeteer");
 
     const browser = await puppeteer.launch({ headless: true });
-     const page = await browser.newPage();
-
-    /*    page.on("console", function(msg: any) {
-      console.log(msg.text());
-    }); */
-
-    //await page.setRequestInterception(true);
+    const page = await browser.newPage();
 
     //Register the rules
     dialog.listen(page);
@@ -50,12 +43,10 @@ export class Runner {
     requestRule.listen(page);
     frame.listen(page);
 
-
     await page.goto(url);
     if (delay > 0) {
       await page.waitFor(delay * 1000);
     }
-
 
     let allRulesResults: RuleResult[] = [];
 
@@ -67,23 +58,19 @@ export class Runner {
 
     var promiseArray = new Array<Promise<any>>();
 
-
     promiseArray.push(consoleRule.results(includeMeta));
     promiseArray.push(dialog.results());
-   // promiseArray.push(errorRule.results(includeMeta));
     promiseArray.push(imageRule.validate(page, includeMeta));
     promiseArray.push(requestRule.results(includeMeta));
-    promiseArray.push(perfTiming.results(page,includeMeta));
-    promiseArray.push(pageMetrics.results(page,includeMeta));
-    promiseArray.push(frame.results(page,includeMeta));
-
-
+    promiseArray.push(perfTiming.results(page, includeMeta));
+    promiseArray.push(pageMetrics.results(page, includeMeta));
+    promiseArray.push(frame.results(page, includeMeta));
 
     var result = Promise.all(promiseArray)
       .then(async (result: any) => {
-       await browser.close();
+        await browser.close();
 
-        console.log('done');
+        console.log("done");
         const d = {
           id: "",
           url: url,
@@ -94,7 +81,7 @@ export class Runner {
           return new Result(document.id, 0);
         });
       })
-      .catch((err:any) => {
+      .catch((err: any) => {
         console.log(err);
         return new Result("", 0);
       });
