@@ -33,7 +33,7 @@ class Runner {
         return __awaiter(this, void 0, void 0, function* () {
             debug.log(`Analyzing URL:${url}`);
             const puppeteer = require("puppeteer");
-            const browser = yield puppeteer.launch({ headless: false });
+            const browser = yield puppeteer.launch({ headless: true });
             const page = yield browser.newPage();
             /*    page.on("console", function(msg: any) {
               console.log(msg.text());

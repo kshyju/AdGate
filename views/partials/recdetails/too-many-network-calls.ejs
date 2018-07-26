@@ -1,12 +1,12 @@
 <div>
     <h4>Rule: Too many network calls</h4>
-    <p>strong>Status: <%= getStatusName(model.status) %></strong></p>
-    <p>Making too many calls from the browser will slow down the rendering experience.</p>
+    <p><strong>Status: <%= getStatusName(model.status) %></strong></p>
+    <p>Making too many calls from the browser will slow down the rendering experience. </p>
     <h4>What this rule checks</h4>
     <ul>
         <li>If number of requests made <5 : Passed</li>
         <li>If number of requests made >5 and <8 : Warning</li>
-        <li>If number of requests made >5 : Failed</li>
+        <li>If number of requests made >8 : Failed</li>
     </ul>
 
     <%
@@ -44,6 +44,7 @@
     }
 %>
 
+<hr>
 
 </div>
 

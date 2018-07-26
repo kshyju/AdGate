@@ -1,10 +1,17 @@
-<h3>AdGate analysis results</h3>
 
+<h3>Our recommendation</h3>
+<div>
+
+    <div class="alert alert-info">
+       <h2> <%= recommendation %></h2>
+    </div>
+</div>
+<hr>
 
 <div>
     <% model.ruleResults.forEach(function(ruleResult) { %>
         <div>
-            <h3><%= getRuleDisplayName(ruleResult.name) %></h3>
+            <h4><%= getRuleDisplayName(ruleResult.name) %></h4>
             <div>
                 <% ruleResult.recommendations.forEach(function(recommendation) { %>
                     <div class="recommendation-container">

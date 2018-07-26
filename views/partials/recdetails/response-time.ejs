@@ -2,17 +2,26 @@
     <h4>Rule: Response time</h4>
     <p><strong>Status: <%= getStatusName(model.status) %></strong>
     </p>
-    <p>Slow response time is bad!</p>
+    <p>Slow response time is bad!. If the latency of a round trip to the server in addition to the time spent waiting for the server to deliver the response is slow, that would result in a slow loading experience for the user.</p>
     <h4>What this rule checks</h4>
-    <p>If TTFB  < 200 mil second: Passed </p>
-    <p>If TTFB  > 200 mil second and <= 600 mil second: Warning </p>
-    <p>If TTFB  > 600 mil second: Failed </p>
+    <ul>
+        <li>If TTFB  < 200 mil second: Passed </li>
+        <li>If TTFB  > 200 mil second and <= 600 mil second: Warning</li>
+        <li>If TTFB  > 600 mil second: Failed</li>
+    </ul>
 
     <% if(meta)
     {
     %>
     <div>
-       <p>  responseStart : <%= Math.round(meta.navTimings.responseStart,2) %>  seconds</p>
+       <p>  Time to first byte : <%= Math.round(meta.navTimings.responseStart,2) %>  seconds</p>
     </div>
     <% } %>
+
+    <h4>Further reading</h4>
+    <a href="https://developers.google.com/web/tools/chrome-devtools/network-performance/understanding-resource-timing">
+        Resource timing APIs</a>
+
+    <hr>
+
 </div>

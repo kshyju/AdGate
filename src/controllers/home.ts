@@ -28,17 +28,28 @@ export let details = async (req: any, res: any) => {
 
 
         let recommendations:any[] = [];
-
+        let failedAutits = 0;
 
         document.ruleResults.map(function(ruleResult:any) {
             //console.log(key);
-            recommendations.push(...ruleResult.recommendations);
 
+            //recommendations.push(...ruleResult.recommendations);
+            ruleResult.recommendations.forEach(function(rec:any){
+                if(rec.status===3)
+                {
+                    failedAutits++;
+                }
+            });
         });
 
+        var recommendation = "AdGate found no issues :). This url can be used to render ads without affecting page performance.";
+        if(failedAutits>0)
+        {
+            recommendation = "😟 AdGate found "+ failedAutits + " failed audits for this url, which might affect the page performance. We recommend you fix the below failed categories.";
+        }
 
 
-        res.render("details", { model: document});
+        res.render("details", { model: document, recommendation:recommendation});
     }).catch(function(err){
         debug.log(`ERROR:${err}`);
         res.render("details", { resultItems: [] });
