@@ -20,7 +20,11 @@ export class PerfTiming {
         paintTimings[item.name] = item.startTime;
       });
 
-      var navigationTimings = performance.getEntriesByType('navigation')[0];
+      let navigationTimings : {
+        [key:string]: any;
+      }
+      
+      navigationTimings = performance.getEntriesByType('navigation')[0];
 
       var navTimings: { [key: string]: any[] } = {};
 
