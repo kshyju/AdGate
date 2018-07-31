@@ -88,6 +88,12 @@ app.locals.getDisplayName = function (ruleName: string) {
   else if (ruleName == "js-listener-count") {
     return "Too many event listeners in the page";
   }
+  else if (ruleName == "js-coverage") {
+    return "JavaScript code coverage";
+  }
+  else if (ruleName == "css-coverage") {
+    return "CSS code coverage";
+  }
   else {
     return ruleName;
   }
@@ -113,6 +119,9 @@ app.locals.getRuleDisplayName = function (ruleName: string) {
   }
   else if (ruleName == "dialog") {
     return "User Experience";
+  }
+  else if (ruleName == "coverage") {
+    return "Code coverage";
   }
   else {
     return ruleName;

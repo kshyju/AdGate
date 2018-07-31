@@ -14,6 +14,7 @@ const Result_1 = require("./types/Result");
 const Cosmos_1 = require("./resultformatter/Cosmos");
 const requests_1 = require("./rules/requests");
 const Console_1 = require("./rules/Console");
+const coverage_1 = require("./rules/coverage");
 const perftiming_1 = require("./rules/perftiming");
 const Dialog_1 = require("./rules/Dialog");
 const pagemetrics_1 = require("./rules/pagemetrics");
@@ -22,11 +23,11 @@ const debug = new debug_1.Debug();
 const imageRule = new image_1.ImageRule();
 const requestRule = new requests_1.Requests();
 const consoleRule = new Console_1.Console();
-//const errorRule = new Errors();
 const perfTiming = new perftiming_1.PerfTiming();
 const dialog = new Dialog_1.Dialog();
 const pageMetrics = new pagemetrics_1.PageMetrics();
 const frame = new frames_1.Frames();
+const coverage = new coverage_1.Coverage();
 var cosmos = new Cosmos_1.Cosmos();
 class Runner {
     runRules(url, delay, includeMeta) {
@@ -35,15 +36,12 @@ class Runner {
             const puppeteer = require("puppeteer");
             const browser = yield puppeteer.launch({ headless: true });
             const page = yield browser.newPage();
-            /*    page.on("console", function(msg: any) {
-              console.log(msg.text());
-            }); */
-            //await page.setRequestInterception(true);
             //Register the rules
             dialog.listen(page);
             consoleRule.listen(page);
             requestRule.listen(page);
             frame.listen(page);
+            coverage.listen(page);
             yield page.goto(url);
             if (delay > 0) {
                 yield page.waitFor(delay * 1000);
@@ -57,16 +55,16 @@ class Runner {
             var promiseArray = new Array();
             promiseArray.push(consoleRule.results(includeMeta));
             promiseArray.push(dialog.results());
-            // promiseArray.push(errorRule.results(includeMeta));
             promiseArray.push(imageRule.validate(page, includeMeta));
             promiseArray.push(requestRule.results(includeMeta));
             promiseArray.push(perfTiming.results(page, includeMeta));
             promiseArray.push(pageMetrics.results(page, includeMeta));
             promiseArray.push(frame.results(page, includeMeta));
+            promiseArray.push(coverage.results(page, includeMeta));
             var result = Promise.all(promiseArray)
                 .then((result) => __awaiter(this, void 0, void 0, function* () {
                 yield browser.close();
-                console.log('done');
+                console.log("done");
                 const d = {
                     id: "",
                     url: url,

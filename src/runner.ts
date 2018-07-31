@@ -5,7 +5,7 @@ import { Cosmos } from "./resultformatter/Cosmos";
 import { NewDocument } from "documentdb";
 import { Requests } from "./rules/requests";
 import { Console } from "./rules/Console";
-//import { Errors } from "./rules/errors";
+import { Coverage } from "./rules/coverage";
 import { RuleResult } from "./types/RuleResult";
 import { PerfTiming } from "./rules/perftiming";
 import { Dialog } from "./rules/Dialog";
@@ -21,6 +21,7 @@ const perfTiming = new PerfTiming();
 const dialog = new Dialog();
 const pageMetrics = new PageMetrics();
 const frame = new Frames();
+const coverage = new Coverage();
 
 var cosmos = new Cosmos();
 
@@ -33,7 +34,6 @@ export class Runner {
     debug.log(`Analyzing URL:${url}`);
 
     const puppeteer = require("puppeteer");
-
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
@@ -42,6 +42,7 @@ export class Runner {
     consoleRule.listen(page);
     requestRule.listen(page);
     frame.listen(page);
+    coverage.listen(page);
 
     await page.goto(url);
     if (delay > 0) {
@@ -65,6 +66,7 @@ export class Runner {
     promiseArray.push(perfTiming.results(page, includeMeta));
     promiseArray.push(pageMetrics.results(page, includeMeta));
     promiseArray.push(frame.results(page, includeMeta));
+    promiseArray.push(coverage.results(page, includeMeta));
 
     var result = Promise.all(promiseArray)
       .then(async (result: any) => {

@@ -1,0 +1,20 @@
+<div>
+    <h4>Rule: CSS code coverage</h4>
+    <p><strong>Status: <%= getStatusName(model.status) %></strong>
+    </p>
+    <p>Serve only the CSS code needed by the page. Sending a whole lot of code extra CSS, which is not being used by the page will hurt performance as it will take network bandwidth and additional parse time.</p>
+    <h4>What this rule checks</h4>
+    <ul>
+        <li>If CSS code coverage is > 60: Passed </li>
+        <li>If CSS code coverage is <= 60 && >25: Warning</li>
+        <li>If CSS code coverage is <= 25: Failed</li>
+    </ul>
+
+    <% if(meta)
+    {
+    %>
+    <div>
+       <p>CSS code - Total bytes used: <%= Math.round(meta.cssTotalBytesUsed,2) %>  %</p>
+    </div>
+    <% } %>
+</div>
